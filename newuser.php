@@ -37,22 +37,20 @@ $rol = $_SESSION['ID_Rol']
 </head>
 
 <body>
-  <div id="global-loader">
+<div id="global-loader">
     <div class="whirly-loader"></div>
   </div>
-
   <div class="main-wrapper">
     <div class="header">
       <div class="header-left active">
-        <a href="index.html" class="logo">
+        <a href="index.php" class="logo">
           <img src="assets/img/logos/esfim_logo.png" alt="" />
         </a>
-        <a href="index.html" class="logo-small">
+        <a href="index.php" class="logo-small">
           <img src="assets/img/logos/esfim_logo.png" alt="" />
         </a>
         <a id="toggle_btn" href="javascript:void(0);"> </a>
       </div>
-
       <a id="mobile_btn" class="mobile_btn" href="#sidebar">
         <span class="bar-icon">
           <span></span>
@@ -60,7 +58,6 @@ $rol = $_SESSION['ID_Rol']
           <span></span>
         </span>
       </a>
-
       <ul class="nav user-menu">
         <li class="nav-item dropdown has-arrow main-drop">
           <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
@@ -80,27 +77,18 @@ $rol = $_SESSION['ID_Rol']
                   <h5>Admin</h5>
                 </div>
               </div>
-              <hr class="m-0" />
-              <a class="dropdown-item" href="profile.html">
-                <i class="me-2" data-feather="user"></i> Mi Perfil</a>
-              <a class="dropdown-item" href="generalsettings.html"><i class="me-2" data-feather="settings"></i>Configuracion</a>
-              <hr class="m-0" />
-              <a class="dropdown-item logout pb-0" href="signin.html"><img src="assets/img/icons/log-out.svg" class="me-2" alt="img" />Cerrar Sesión</a>
+              <a class="dropdown-item logout pb-0" href="cerrar_sesion.php"><img src="assets/img/icons/log-out.svg" class="me-2" alt="img" />Cerrar Sesión</a>
             </div>
           </div>
         </li>
       </ul>
-
       <div class="dropdown mobile-user-menu">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="profile.html">My Profile</a>
-          <a class="dropdown-item" href="generalsettings.html">Settings</a>
-          <a class="dropdown-item" href="cerrar_sesion.php">Logout</a>
+          <a class="dropdown-item" href="cerrar_sesion.php">Cerrar sesión</a>
         </div>
       </div>
     </div>
-
     <div class="sidebar" id="sidebar">
       <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
@@ -131,16 +119,19 @@ $rol = $_SESSION['ID_Rol']
             </li>
             <li class="submenu">
               <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
-                  Configuracion</span>
+                  Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-                <li><a href="generalsettings.php">General Settings</a></li>
+                <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
+                <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
               </ul>
             </li>
           </ul>
         </div>
       </div>
     </div>
+  </div>
+
 
     <div class="page-wrapper">
       <div class="content">
@@ -151,9 +142,9 @@ $rol = $_SESSION['ID_Rol']
           </div>
         </div>
 
-        <div class="card">
+        <div class="card shadow">
           <div class="card-body">
-            <form action="agregar_usuario.php" method="post" enctype="multipart/form-data">
+            <form action="agregar_usuario.php" method="post" >
               <div class="row">
                 <div class="col-lg-3 col-sm-6 col-12">
                   <div class="form-group">

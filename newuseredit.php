@@ -6,9 +6,58 @@ if (!isset($_SESSION['id'])) {
   exit();
 }
 
-
 $nombre = $_SESSION['nombre'];
-$rol = $_SESSION['ID_Rol']
+$rol = $_SESSION['ID_Rol'];
+
+include "./conexion.php";
+
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+  $id_usuario = $_GET['id'];
+
+  $stmt = $mysqli->prepare("SELECT * FROM usuarios WHERE id = ?");
+  $stmt->bind_param("i", $id_usuario);
+  $stmt->execute();
+  $resultado = $stmt->get_result();
+  $usuario = $resultado->fetch_assoc();
+
+  if (!$usuario) {
+    header("Location: userlists.php");
+    exit();
+  }
+
+  $stmt->close();
+} else {
+  header("Location: userlists.php");
+  exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $Documento = trim($_POST['Documento']);
+  $Nombre = trim($_POST['Nombre']);
+  $Cargo = trim($_POST['Cargo']);
+  $Unidad = trim($_POST['Unidad']);
+  $Usuario = trim($_POST['Usuario']);
+  $contrasena = trim($_POST['contrasena']);
+  $Rol = trim($_POST['ID_Rol']);
+
+  // Validar campos
+  if (empty($Documento) || empty($Nombre) || empty($Cargo) || empty($Unidad) || empty($Usuario) || empty($contrasena) || empty($Rol)) {
+    echo "Todos los campos son obligatorios.";
+  } else {
+    // Actualizar el usuario en la base de datos
+    $stmt = $mysqli->prepare("UPDATE usuarios SET Documento = ?, Nombre = ?, Cargo = ?, Unidad  = ?, Usuario = ?, contrasena = ?, ID_Rol = ? WHERE id = ?");
+    $stmt->bind_param("ssssssii", $Documento, $Nombre, $Cargo, $Unidad, $Usuario, $contrasena, $Rol, $id_usuario);
+
+    if ($stmt->execute()) {
+      header("Location: userlists.php");
+      exit();
+    } else {
+      echo "Error al actualizar el usuario: " . $stmt->error;
+    }
+
+    $stmt->close();
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +89,6 @@ $rol = $_SESSION['ID_Rol']
   <div id="global-loader">
     <div class="whirly-loader"></div>
   </div>
-
   <div class="main-wrapper">
     <div class="header">
       <div class="header-left active">
@@ -52,7 +100,6 @@ $rol = $_SESSION['ID_Rol']
         </a>
         <a id="toggle_btn" href="javascript:void(0);"> </a>
       </div>
-
       <a id="mobile_btn" class="mobile_btn" href="#sidebar">
         <span class="bar-icon">
           <span></span>
@@ -60,7 +107,6 @@ $rol = $_SESSION['ID_Rol']
           <span></span>
         </span>
       </a>
-
       <ul class="nav user-menu">
         <li class="nav-item dropdown has-arrow main-drop">
           <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
@@ -80,27 +126,18 @@ $rol = $_SESSION['ID_Rol']
                   <h5>Admin</h5>
                 </div>
               </div>
-              <hr class="m-0" />
-              <a class="dropdown-item" href="profile.html">
-                <i class="me-2" data-feather="user"></i> Mi Perfil</a>
-              <a class="dropdown-item" href="generalsettings.html"><i class="me-2" data-feather="settings"></i>Configuracion</a>
-              <hr class="m-0" />
-              <a class="dropdown-item logout pb-0" href="signin.html"><img src="assets/img/icons/log-out.svg" class="me-2" alt="img" />Cerrar Sesión</a>
+              <a class="dropdown-item logout pb-0" href="cerrar_sesion.php"><img src="assets/img/icons/log-out.svg" class="me-2" alt="img" />Cerrar Sesión</a>
             </div>
           </div>
         </li>
       </ul>
-
       <div class="dropdown mobile-user-menu">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="profile.html">My Profile</a>
-          <a class="dropdown-item" href="generalsettings.html">Settings</a>
-          <a class="dropdown-item" href="cerrar_sesion.php">Logout</a>
+          <a class="dropdown-item" href="cerrar_sesion.php">Cerrar sesión</a>
         </div>
       </div>
     </div>
-
     <div class="sidebar" id="sidebar">
       <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
@@ -131,79 +168,79 @@ $rol = $_SESSION['ID_Rol']
             </li>
             <li class="submenu">
               <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
-                  Configuracion</span>
+                  Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-                <li><a href="generalsettings.php">General Settings</a></li>
+                <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
+                <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
               </ul>
             </li>
           </ul>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="page-wrapper">
-      <div class="content">
-        <div class="page-header">
-          <div class="page-title">
-            <h4>Administracion de Usuarios</h4>
-            <h6>Editar/Actualizar User</h6>
-          </div>
+  <div class="page-wrapper">
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title">
+          <h4>Administracion de Usuarios</h4>
+          <h6>Editar/Actualizar Usuario</h6>
         </div>
-
-        <div class="card">
-          <div class="card-body">
+      </div>
+      <div class="card shadow">
+        <div class="card-body">
+          <form method="post" action="">
             <div class="row">
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Documento</label>
-                  <input type="text" placeholder="williams1234" />
+                  <input type="text" name="Documento" value="<?php echo htmlspecialchars($usuario['Documento']); ?>" />
                 </div>
                 <div class="form-group">
                   <label>Nombre</label>
-                  <input type="text" placeholder="williams1234@example.com" />
+                  <input type="text" name="Nombre" value="<?php echo htmlspecialchars($usuario['Nombre']); ?>" />
                 </div>
                 <div class="form-group">
                   <label>Cargo</label>
-                  <input type="text" placeholder="williams1234@example.com" />
+                  <input type="text" name="Cargo" value="<?php echo htmlspecialchars($usuario['Cargo']); ?>" />
                 </div>
               </div>
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Unidad</label>
-                  <input type="text" placeholder="+12163547758 " />
+                  <input type="text" name="Unidad" value="<?php echo htmlspecialchars($usuario['Unidad']); ?>" />
                 </div>
                 <div class="form-group">
                   <label>Usuario</label>
-                  <input type="text" placeholder="williams1234" />
+                  <input type="text" name="Usuario" value="<?php echo htmlspecialchars($usuario['Usuario']); ?>" />
                 </div>
                 <div class="form-group">
                   <label>Contraseña</label>
                   <div class="pass-group">
-                    <input type="password" class="pass-inputs" value="123456" />
+                    <input type="password" class="pass-inputs" name="contrasena" value="<?php echo htmlspecialchars($usuario['contrasena']); ?>" />
                     <span class="fas toggle-passworda fa-eye-slash"></span>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Rol</label>
-                  <select class="select">
-                    <option>1. Administrador</option>
-                    <option>2. Observador</option>
+                  <select class="select" name="ID_Rol">
+                    <option value="1" <?php echo ($usuario['ID_Rol'] == 1) ? 'selected' : ''; ?>>1. Administrador</option>
+                    <option value="2" <?php echo ($usuario['ID_Rol'] == 2) ? 'selected' : ''; ?>>2. Observador</option>
                   </select>
                 </div>
-                
-                
               </div>
-              
               <div class="col-lg-12">
-                <a href="javascript:void(0);" class="btn btn-submit me-2">Submit</a>
-                <a href="javascript:void(0);" class="btn btn-cancel">Cancel</a>
+                <button type="submit" class="btn btn-success me-2">Guardar</button>
+                <a href="userlists.php" class="btn btn-danger">Cancelar</a>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <script src="assets/js/jquery-3.6.0.min.js"></script>

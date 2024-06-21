@@ -34,11 +34,11 @@ $rol = $_SESSION['ID_Rol']
   <div class="main-wrapper">
     <div class="header">
       <div class="header-left active">
-        <a href="index.html" class="logo">
-          <img src="assets/img/logos/esfim_logo.png" alt="" />
+        <a href="index.php" class="logo">
+          <img src="assets/img/logos/esfim_logo.png" alt="" width="50px"/>
         </a>
-        <a href="index.html" class="logo-small">
-          <img src="assets/img/logos/esfim_logo.png" alt="" />
+        <a href="index.php" class="logo-small">
+          <img src="assets/img/logos/esfim_logo.png" alt="" width="50px"/>
         </a>
         <a id="toggle_btn" href="javascript:void(0);"> </a>
       </div>
@@ -68,11 +68,6 @@ $rol = $_SESSION['ID_Rol']
                   <h5>Admin</h5>
                 </div>
               </div>
-              <hr class="m-0" />
-              <a class="dropdown-item" href="profile.html">
-                <i class="me-2" data-feather="user"></i> Mi Perfil</a>
-              <a class="dropdown-item" href="generalsettings.html"><i class="me-2" data-feather="settings"></i>Configuracion</a>
-              <hr class="m-0" />
               <a class="dropdown-item logout pb-0" href="cerrar_sesion.php"><img src="assets/img/icons/log-out.svg" class="me-2" alt="img" />Cerrar Sesión</a>
             </div>
           </div>
@@ -81,9 +76,7 @@ $rol = $_SESSION['ID_Rol']
       <div class="dropdown mobile-user-menu">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="profile.html">My Profile</a>
-          <a class="dropdown-item" href="generalsettings.html">Settings</a>
-          <a class="dropdown-item" href="cerrar_sesion.php">Logout</a>
+          <a class="dropdown-item" href="cerrar_sesion.php">Cerrar sesión</a>
         </div>
       </div>
     </div>
@@ -117,10 +110,11 @@ $rol = $_SESSION['ID_Rol']
             </li>
             <li class="submenu">
               <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
-                  Configuracion</span>
+                  Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-                <li><a href="generalsettings.php">General Settings</a></li>
+                <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
+                <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
               </ul>
             </li>
           </ul>
@@ -128,6 +122,10 @@ $rol = $_SESSION['ID_Rol']
       </div>
     </div>
   </div>
+
+
+
+
   <script src="assets/js/jquery-3.6.0.min.js"></script>
   <script src="assets/js/feather.min.js"></script>
   <script src="assets/js/jquery.slimscroll.min.js"></script>
