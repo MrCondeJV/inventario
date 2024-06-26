@@ -12,10 +12,18 @@ $usuario_id = $_POST['usuario_id'];
 
 // Obtener todos los préstamos del usuario
 $prestamos = [];
-if ($stmt = $mysqli->prepare("SELECT id, Serie_equipo, Cantidad_prestada FROM prestamos WHERE Nombre_usuario = (SELECT nombre FROM usuarios WHERE id = ?)")) {
+if ($stmt = $mysqli->prepare("SELECT id, Serie_equipo, Cantidad_prestada FROM detalles_prestamo WHERE id_prestamo = ?")) {
     $stmt->bind_param("i", $usuario_id);
     $stmt->execute();
     $result = $stmt->get_result();
+
+    // Verificar el número de filas devueltas
+    if ($result->num_rows === 0) {
+        // No hay préstamos encontrados para este usuario
+        header("Location: entregar_equipo.php?usuario_id=" . $usuario_id);
+        exit();
+    }
+
     while ($row = $result->fetch_assoc()) {
         $prestamos[] = $row;
     }
@@ -36,19 +44,44 @@ foreach ($prestamos as $prestamo) {
     }
 
     // Registrar la entrega en la tabla entregas
-    if ($stmt = $mysqli->prepare("INSERT INTO entregas (Cod_entrega, Nombre_usuario, Serie_equipo, Equipo, Cantidad_entregado, Fecha_entregado) VALUES (?, (SELECT Nombre FROM usuarios WHERE id = ?), ?, (SELECT Nombre FROM equipos WHERE Serie = ?), ?, NOW())")) {
+    if ($stmt = $mysqli->prepare("INSERT INTO entregas (Cod_entrega, Nombre_usuario, Serie_equipo, Equipo, Cantidad_entregado, Fecha_entregado) VALUES (?, ?, ?, (SELECT Nombre FROM equipos WHERE Serie = ?), ?, NOW())")) {
         $cod_entrega = uniqid('ENTREGA_', true); // Generar un código único para la entrega
-        $stmt->bind_param("sissi", $cod_entrega, $usuario_id, $serie_equipo, $serie_equipo, $cantidad_entregada);
+        $nombre_usuario = obtenerNombreUsuario($mysqli, $usuario_id);
+        $nombre_equipo = obtenerNombreEquipo($mysqli, $serie_equipo);
+
+        $stmt->bind_param("ssisi", $cod_entrega, $nombre_usuario, $serie_equipo, $serie_equipo, $cantidad_entregada);
         $stmt->execute();
         $stmt->close();
     }
 
     // Eliminar el registro de prestamo correspondiente
-    if ($stmt = $mysqli->prepare("DELETE FROM prestamos WHERE id = ?")) {
+    if ($stmt = $mysqli->prepare("DELETE FROM detalles_prestamo WHERE id = ?")) {
         $stmt->bind_param("i", $prestamo_id);
         $stmt->execute();
         $stmt->close();
     }
+}
+
+// Función para obtener el nombre de usuario
+function obtenerNombreUsuario($mysqli, $usuario_id) {
+    $stmt = $mysqli->prepare("SELECT Nombre FROM usuarios WHERE id = ?");
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $stmt->bind_result($nombre);
+    $stmt->fetch();
+    $stmt->close();
+    return $nombre;
+}
+
+// Función para obtener el nombre del equipo
+function obtenerNombreEquipo($mysqli, $serie_equipo) {
+    $stmt = $mysqli->prepare("SELECT Nombre FROM equipos WHERE Serie = ?");
+    $stmt->bind_param("s", $serie_equipo);
+    $stmt->execute();
+    $stmt->bind_result($nombre);
+    $stmt->fetch();
+    $stmt->close();
+    return $nombre;
 }
 
 header("Location: entregar_equipo.php?usuario_id=" . $usuario_id);

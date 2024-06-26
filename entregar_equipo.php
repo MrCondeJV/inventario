@@ -13,7 +13,8 @@ include "./conexion.php";
 
 // Obtener la lista de usuarios de la base de datos
 $usuarios = [];
-if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios")) {
+$usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios");
+if ($usuarios_stmt) {
     $usuarios_stmt->execute();
     $usuarios_result = $usuarios_stmt->get_result();
     while ($row = $usuarios_result->fetch_assoc()) {
@@ -22,19 +23,30 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios")) {
     $usuarios_stmt->close();
 }
 
-// Obtener la lista de equipos prestados por el usuario seleccionado
+// Obtener el ID del usuario basado en el nombre
 $usuario_id = isset($_GET['usuario_id']) ? (int)$_GET['usuario_id'] : 0;
+
+// Obtener la lista de préstamos del usuario seleccionado por nombre
 $prestamos = [];
-if ($usuario_id > 0 && $prestamos_stmt = $mysqli->prepare("SELECT p.id, e.Nombre, p.Cantidad_prestada, p.Serie_equipo FROM prestamos p JOIN equipos e ON p.Serie_equipo = e.Serie WHERE p.Nombre_usuario = (SELECT nombre FROM usuarios WHERE id = ?)")) {
-    $prestamos_stmt->bind_param("i", $usuario_id);
-    $prestamos_stmt->execute();
-    $prestamos_result = $prestamos_stmt->get_result();
-    while ($row = $prestamos_result->fetch_assoc()) {
-        $prestamos[] = $row;
+if ($usuario_id > 0) {
+    $prestamos_stmt = $mysqli->prepare("SELECT dp.id, e.Nombre AS Nombre_equipo, dp.Cantidad_prestada, e.Serie 
+    FROM detalles_prestamo dp
+    INNER JOIN equipos e ON dp.Serie_equipo = e.Serie
+    INNER JOIN prestamos p ON dp.id_prestamo = p.id
+    WHERE p.Nombre_usuario = (SELECT nombre FROM usuarios WHERE id = ?)");
+    if ($prestamos_stmt) {
+        $prestamos_stmt->bind_param("i", $usuario_id);
+        $prestamos_stmt->execute();
+        $prestamos_result = $prestamos_stmt->get_result();
+        while ($row = $prestamos_result->fetch_assoc()) {
+            $prestamos[] = $row;
+        }
+        $prestamos_stmt->close();
     }
-    $prestamos_stmt->close();
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -68,13 +80,6 @@ if ($usuario_id > 0 && $prestamos_stmt = $mysqli->prepare("SELECT p.id, e.Nombre
                 </a>
                 <a id="toggle_btn" href="javascript:void(0);"> </a>
             </div>
-            <a id="mobile_btn" class="mobile_btn" href="#sidebar">
-                <span class="bar-icon">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span>
-            </a>
             <ul class="nav user-menu">
                 <li class="nav-item dropdown has-arrow main-drop">
                     <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
@@ -121,7 +126,6 @@ if ($usuario_id > 0 && $prestamos_stmt = $mysqli->prepare("SELECT p.id, e.Nombre
                                 <li><a href="addproducto.php">Agregar Equipo</a></li>
                             </ul>
                         </li>
-
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="users-icon" /><span>
                                     Usuarios</span>
@@ -156,7 +160,8 @@ if ($usuario_id > 0 && $prestamos_stmt = $mysqli->prepare("SELECT p.id, e.Nombre
 
             <div class="card shadow">
                 <div class="card-body">
-                    <form action="entregar_equipo.php" method="GET">
+                    <form action="procesar_entrega_todo.php" method="POST">
+                        <input type="hidden" name="usuario_id" value="<?php echo $usuario_id; ?>">
                         <div class="row">
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
@@ -170,60 +175,50 @@ if ($usuario_id > 0 && $prestamos_stmt = $mysqli->prepare("SELECT p.id, e.Nombre
                                 </div>
                             </div>
                         </div>
-                    </form>
 
-                    <form action="procesar_entrega_todo.php" method="POST">
-                        <input type="hidden" name="usuario_id" value="<?php echo $usuario_id; ?>">
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label>Equipos a cargo</label>
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Equipo</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Acción</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="equiposTableBody">
-                                                    <?php foreach ($prestamos as $prestamo) : ?>
-                                                        <tr>
-                                                            <td>
-                                                                <label>
-                                                                    <?php echo htmlspecialchars($prestamo['Nombre']); ?>
-                                                                </label>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo htmlspecialchars($prestamo['Cantidad_prestada']); ?>
-                                                            </td>
-                                                            <td>
-                                                                <form action="procesar_entrega.php" method="POST">
-                                                                    <input type="hidden" name="prestamo_id" value="<?php echo $prestamo['id']; ?>">
-                                                                    <input type="hidden" name="serie_equipo" value="<?php echo $prestamo['Serie_equipo']; ?>">
-                                                                    <input type="hidden" name="cantidad_prestada" value="<?php echo $prestamo['Cantidad_prestada']; ?>">
-                                                                    <button type="submit" class="btn btn-warning">Entregar</button>
-                                                                </form>
-                                                            </td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
+                                <?php if ($usuario_id > 0) : ?>
+                                    <?php if (count($prestamos) > 0) : ?>
+                                        <div class="form-group">
+                                            <label>Equipos a cargo</label>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Equipo</th>
+                                                                <th>Cantidad</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="equiposTableBody">
+                                                            <?php foreach ($prestamos as $prestamo) : ?>
+                                                                <tr>
+                                                                    <td><?php echo htmlspecialchars($prestamo['Nombre_equipo']); ?></td>
+                                                                    <td><?php echo htmlspecialchars($prestamo['Cantidad_prestada']); ?></td>
+                                                                </tr>
+                                                            <?php endforeach; ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="col-lg-12">
+                                            <button type="submit" class="btn btn-success">Entregar Todo</button>
+                                        </div>
+                                    <?php else : ?>
+                                        <div class="alert alert-info">El usuario seleccionado no tiene equipos a cargo.</div>
+                                    <?php endif; ?>
+                                <?php else : ?>
+                                    <div class="alert alert-info">Seleccione un usuario para ver los equipos a entregar.</div>
+                                <?php endif; ?>
                             </div>
-                            <?php if ($usuario_id > 0 && count($prestamos) > 0) : ?>
-                                <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-success me-2">Entregar Todo</button>
-                                </div>
-                            <?php endif; ?>
                         </div>
                     </form>
                 </div>
             </div>
+
+
         </div>
     </div>
 
@@ -240,6 +235,7 @@ if ($usuario_id > 0 && $prestamos_stmt = $mysqli->prepare("SELECT p.id, e.Nombre
 
     <script>
         // Filtrar equipos dinámicamente por nombre
+
         $(document).ready(function() {
             $('#buscarEquipo').on('input', function() {
                 var searchText = $(this).val().toLowerCase();
