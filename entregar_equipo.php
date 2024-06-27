@@ -1,52 +1,61 @@
 <?php
 session_start();
 
+// Verificar sesión activa
 if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit();
 }
 
+// Incluir archivo de conexión
+include "./conexion.php";
+
+// Obtener el nombre de usuario y rol de la sesión
 $nombre = $_SESSION['nombre'];
 $rol = $_SESSION['ID_Rol'];
 
-include "./conexion.php";
-
-// Obtener la lista de usuarios de la base de datos
+// Obtener la lista de usuarios
 $usuarios = [];
-$usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios");
+$usuarios_stmt = $mysqli->query("SELECT id, nombre FROM usuarios");
 if ($usuarios_stmt) {
-    $usuarios_stmt->execute();
-    $usuarios_result = $usuarios_stmt->get_result();
-    while ($row = $usuarios_result->fetch_assoc()) {
-        $usuarios[] = $row;
-    }
-    $usuarios_stmt->close();
+    $usuarios = $usuarios_stmt->fetch_all(MYSQLI_ASSOC);
 }
 
-// Obtener el ID del usuario basado en el nombre
+// Obtener el usuario seleccionado (si existe)
 $usuario_id = isset($_GET['usuario_id']) ? (int)$_GET['usuario_id'] : 0;
 
-// Obtener la lista de préstamos del usuario seleccionado por nombre
+// Obtener los préstamos del usuario seleccionado
 $prestamos = [];
 if ($usuario_id > 0) {
     $prestamos_stmt = $mysqli->prepare("SELECT dp.id, e.Nombre AS Nombre_equipo, dp.Cantidad_prestada, e.Serie 
-    FROM detalles_prestamo dp
-    INNER JOIN equipos e ON dp.Serie_equipo = e.Serie
-    INNER JOIN prestamos p ON dp.id_prestamo = p.id
-    WHERE p.Nombre_usuario = (SELECT nombre FROM usuarios WHERE id = ?)");
+        FROM detalles_prestamo dp
+        INNER JOIN equipos e ON dp.serie_equipo = e.Serie
+        INNER JOIN prestamos p ON dp.id_prestamo = p.id
+        WHERE p.usuario_id = ?");
     if ($prestamos_stmt) {
         $prestamos_stmt->bind_param("i", $usuario_id);
         $prestamos_stmt->execute();
         $prestamos_result = $prestamos_stmt->get_result();
-        while ($row = $prestamos_result->fetch_assoc()) {
-            $prestamos[] = $row;
-        }
+        $prestamos = $prestamos_result->fetch_all(MYSQLI_ASSOC);
         $prestamos_stmt->close();
     }
 }
+
+// Procesar la entrega de todos los equipos
+if (isset($_POST['entregar_todo'])) {
+    $marcar_entrega_stmt = $mysqli->prepare("UPDATE detalles_prestamo SET Estado = 1 
+        WHERE id_prestamo IN (SELECT id FROM prestamos WHERE usuario_id = ?)");
+    if ($marcar_entrega_stmt) {
+        $marcar_entrega_stmt->bind_param("i", $usuario_id);
+        if ($marcar_entrega_stmt->execute()) {
+            $success_message = "Se han marcado todos los equipos como entregados correctamente.";
+        } else {
+            $error_message = "Error al marcar los equipos como entregados: " . $mysqli->error;
+        }
+        $marcar_entrega_stmt->close();
+    }
+}
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -153,6 +162,12 @@ if ($usuario_id > 0) {
     <div class="page-wrapper">
         <div class="content">
             <div class="page-header">
+                <?php if (isset($_GET['success'])) : ?>
+                    <div class="alert alert-success">Equipos entregados exitosamente.</div>
+                <?php elseif (isset($_GET['error'])) : ?>
+                    <div class="alert alert-danger">Hubo un error al procesar la entrega. Por favor, inténtelo de nuevo.</div>
+                <?php endif; ?>
+
                 <div class="page-title">
                     <h4>Entrega de Equipos</h4>
                 </div>
@@ -160,8 +175,7 @@ if ($usuario_id > 0) {
 
             <div class="card shadow">
                 <div class="card-body">
-                    <form action="procesar_entrega_todo.php" method="POST">
-                        <input type="hidden" name="usuario_id" value="<?php echo $usuario_id; ?>">
+                    <form action="entregar_equipo.php" method="GET">
                         <div class="row">
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
@@ -175,10 +189,13 @@ if ($usuario_id > 0) {
                                 </div>
                             </div>
                         </div>
+                    </form>
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <?php if ($usuario_id > 0) : ?>
+                    <?php if ($usuario_id > 0) : ?>
+                        <form action="entregar_equipo.php" method="POST">
+                            <input  name="usuario_id" value="<?php echo $usuario_id; ?>">
+                            <div class="row">
+                                <div class="col-lg-12">
                                     <?php if (count($prestamos) > 0) : ?>
                                         <div class="form-group">
                                             <label>Equipos a cargo</label>
@@ -204,21 +221,19 @@ if ($usuario_id > 0) {
                                             </div>
                                         </div>
                                         <div class="col-lg-12">
-                                            <button type="submit" class="btn btn-success">Entregar Todo</button>
+                                            <button type="submit" class="btn btn-success" name="entregar_todo">Entregar Todo</button>
                                         </div>
                                     <?php else : ?>
                                         <div class="alert alert-info">El usuario seleccionado no tiene equipos a cargo.</div>
                                     <?php endif; ?>
-                                <?php else : ?>
-                                    <div class="alert alert-info">Seleccione un usuario para ver los equipos a entregar.</div>
-                                <?php endif; ?>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    <?php else : ?>
+                        <div class="alert alert-info">Seleccione un usuario para ver los equipos a entregar.</div>
+                    <?php endif; ?>
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -235,7 +250,6 @@ if ($usuario_id > 0) {
 
     <script>
         // Filtrar equipos dinámicamente por nombre
-
         $(document).ready(function() {
             $('#buscarEquipo').on('input', function() {
                 var searchText = $(this).val().toLowerCase();
