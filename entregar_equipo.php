@@ -196,7 +196,8 @@ if (isset($_POST['entregar_todo'])) {
 
                     <?php if ($usuario_id > 0) : ?>
                         <form action="procesar_entrega_todo.php" method="POST">
-                        <input type="hidden" name="usuario_id" value="<?php echo $usuario_id; ?>">
+                            <input type="hidden" name="usuario_id" value="<?php echo $usuario_id; ?>">
+                            <input type="hidden" name="equipos" id="equiposField">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <?php if (count($prestamos) > 0) : ?>
@@ -220,6 +221,24 @@ if (isset($_POST['entregar_todo'])) {
                                                             <?php endforeach; ?>
                                                         </tbody>
                                                     </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Recomendaciones técnicas</label>
+                                                    <div class="card">
+                                                        <textarea class="form-control" name="recomendaciones" rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Observaciones</label>
+                                                    <div class="card">
+                                                        <textarea class="form-control" name="observaciones" rows="3"></textarea>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,18 +271,17 @@ if (isset($_POST['entregar_todo'])) {
     <script src="assets/js/script.js"></script>
 
     <script>
-        // Filtrar equipos dinámicamente por nombre
         $(document).ready(function() {
-            $('#buscarEquipo').on('input', function() {
-                var searchText = $(this).val().toLowerCase();
+            // Llenar el campo oculto con los datos de los equipos cuando se envíe el formulario
+            $('form').on('submit', function() {
+                var equiposData = {};
                 $('#equiposTableBody tr').each(function() {
-                    var nombreEquipo = $(this).find('label').text().toLowerCase();
-                    if (nombreEquipo.includes(searchText)) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
+                    var nombreEquipo = $(this).find('td').first().text();
+                    var cantidad = $(this).find('td').last().text();
+                    equiposData[nombreEquipo] = cantidad;
                 });
+
+                $('#equiposField').val(JSON.stringify(equiposData));
             });
         });
     </script>
