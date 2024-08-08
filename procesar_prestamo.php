@@ -100,7 +100,7 @@ $spreadsheet = IOFactory::load($templatePath);
 $sheet = $spreadsheet->getActiveSheet();
 
 // Encuentra las celdas donde deseas insertar los datos
-$sheet->setCellValue('A2', $codigo_prestamo); // Código de Préstamo
+$sheet->setCellValue('B6', $codigo_prestamo); // Código de Préstamo
 $sheet->setCellValue('B8', $nombre_usuario); // Nombre de Usuario
 $sheet->setCellValue('B7', $fecha_prestamo); // Fecha de Préstamo
 $sheet->setCellValue('B26', $recomendaciones); // Recomendaciones Técnicas
