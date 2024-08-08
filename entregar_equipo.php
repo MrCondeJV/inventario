@@ -274,17 +274,21 @@ if (isset($_POST['entregar_todo'])) {
         $(document).ready(function() {
             // Llenar el campo oculto con los datos de los equipos cuando se envíe el formulario
             $('form').on('submit', function() {
-                var equiposData = {};
+                var equiposData = [];
                 $('#equiposTableBody tr').each(function() {
                     var nombreEquipo = $(this).find('td').first().text();
                     var cantidad = $(this).find('td').last().text();
-                    equiposData[nombreEquipo] = cantidad;
+                    equiposData.push({
+                        nombre: nombreEquipo,
+                        cantidad: cantidad
+                    });
                 });
 
                 $('#equiposField').val(JSON.stringify(equiposData));
             });
         });
     </script>
+
 </body>
 
 </html>
