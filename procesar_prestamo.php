@@ -30,7 +30,7 @@ $usuario_stmt->close();
 
 // Generar un código de préstamo único
 function generateUniqueLoanCode($mysqli) {
-    $prefix = 'PR-'; // Prefijo para el código de préstamo
+    $prefix = 'PRESTAMO-'; // Prefijo para el código de préstamo
     $suffix = substr(md5(uniqid(mt_rand(), true)), 0, 6); // Sufijo único de 6 caracteres
 
     // Generar un código de préstamo único combinando prefijo y sufijo
