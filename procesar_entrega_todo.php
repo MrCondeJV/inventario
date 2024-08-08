@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
         SELECT dp.id, dp.serie_equipo, dp.cantidad_prestada 
         FROM detalles_prestamo dp
         INNER JOIN prestamos p ON dp.id_prestamo = p.id
-        WHERE p.usuario_id = ? AND dp.Estado = 1
+        WHERE p.usuario_id = ? AND dp.Estado = 0
     ")) {
         $stmt->bind_param("i", $usuario_id);
         $stmt->execute();
