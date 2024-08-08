@@ -1,11 +1,24 @@
 <?php
 session_start();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Directorio para el archivo de log
+$log_dir = './assets/error/';
+$log_file = $log_dir . 'php-error-' . date('Y-m-d') . '.log';
+
+// Crear el directorio si no existe
+if (!is_dir($log_dir)) {
+    mkdir($log_dir, 0777, true);
+}
+
+// Configurar el archivo de log
 ini_set('log_errors', 1);
-ini_set('error_log', './assets/error/php-error.log');
+ini_set('error_log', $log_file);
+
+// Configurar la visualización de errores
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+
 
 if (!isset($_SESSION['id'])) {
     header("Location: login.php");
@@ -22,7 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
 
     // Obtener todos los préstamos del usuario según su ID
     $prestamos = [];
-    if ($stmt = $mysqli->prepare("SELECT id, Serie_equipo, Cantidad_prestada FROM detalles_prestamo WHERE usuario_id = ?")) {
+    if ($stmt = $mysqli->prepare("
+        SELECT dp.id, dp.serie_equipo, dp.cantidad_prestada 
+        FROM detalles_prestamo dp
+        INNER JOIN prestamos p ON dp.id_prestamo = p.id
+        WHERE p.usuario_id = ? AND dp.Estado = 1
+    ")) {
         $stmt->bind_param("i", $usuario_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -45,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
     try {
         foreach ($prestamos as $prestamo) {
             $prestamo_id = $prestamo['id'];
-            $serie_equipo = $prestamo['Serie_equipo'];
-            $cantidad_entregada = $prestamo['Cantidad_prestada'];
+            $serie_equipo = $prestamo['serie_equipo'];
+            $cantidad_entregada = $prestamo['cantidad_prestada'];
 
             // Sumar la cantidad entregada de vuelta a la tabla de equipos
             if ($stmt = $mysqli->prepare("UPDATE equipos SET Cantidad = Cantidad + ? WHERE Serie = ?")) {
@@ -61,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
 
             // Registrar la entrega en la tabla entregas
             if ($stmt = $mysqli->prepare("INSERT INTO entregas (Cod_entrega, usuario_id, Nombre_usuario, Fecha_entregado) VALUES (?, ?, ?, NOW())")) {
-                $cod_entrega = uniqid('ENTREGA_', true); // Generar un código único para la entrega
+                $cod_entrega = uniqid('ENTREGA_', true);
                 $stmt->bind_param("sis", $cod_entrega, $usuario_id, $nombre_usuario);
                 if (!$stmt->execute()) {
                     throw new Exception("Error en la ejecución de la inserción de entregas: " . $stmt->error);
@@ -72,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
                 $id_entrega = $mysqli->insert_id;
 
                 // Registrar detalles de la entrega en detalles_entrega
-                if ($stmt_detalle = $mysqli->prepare("INSERT INTO detalles_entrega (id_entrega, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_entregada, Estado) SELECT ?, ?, ?, Serie_equipo, Nombre, ?, 'Entregado' FROM equipos WHERE Serie = ?")) {
+                if ($stmt_detalle = $mysqli->prepare("INSERT INTO detalles_entrega (id_entrega, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_entregada, Estado) SELECT ?, ?, ?, Serie, Nombre, ?, 'Entregado' FROM equipos WHERE Serie = ?")) {
                     $stmt_detalle->bind_param("iisss", $id_entrega, $usuario_id, $nombre_usuario, $cantidad_entregada, $serie_equipo);
                     if (!$stmt_detalle->execute()) {
                         throw new Exception("Error en la ejecución de la inserción de detalles de entrega: " . $stmt_detalle->error);
@@ -112,7 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
     exit();
 }
 
-function obtenerNombreUsuario($mysqli, $usuario_id) {
+function obtenerNombreUsuario($mysqli, $usuario_id)
+{
     $nombre = null;
     if ($stmt = $mysqli->prepare("SELECT nombre FROM usuarios WHERE id = ?")) {
         $stmt->bind_param("i", $usuario_id);

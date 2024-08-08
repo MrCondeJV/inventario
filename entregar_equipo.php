@@ -46,15 +46,18 @@ if (isset($_POST['entregar_todo'])) {
     $marcar_entrega_stmt = $mysqli->prepare("UPDATE detalles_prestamo SET Estado = 1 
         WHERE id_prestamo IN (SELECT id FROM prestamos WHERE usuario_id = ?)");
     if ($marcar_entrega_stmt) {
-        $marcar_entrega_stmt->bind_param("i", $usuario_id);
+        $marcar_entrega_stmt->bind_param("i", $_POST['usuario_id']);
         if ($marcar_entrega_stmt->execute()) {
-            $success_message = "Se han marcado todos los equipos como entregados correctamente.";
+            header("Location: entregar_equipo.php?usuario_id=" . $_POST['usuario_id'] . "&success=true");
+            exit();
         } else {
-            $error_message = "Error al marcar los equipos como entregados: " . $mysqli->error;
+            header("Location: entregar_equipo.php?usuario_id=" . $_POST['usuario_id'] . "&error=true");
+            exit();
         }
         $marcar_entrega_stmt->close();
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -192,8 +195,8 @@ if (isset($_POST['entregar_todo'])) {
                     </form>
 
                     <?php if ($usuario_id > 0) : ?>
-                        <form action="entregar_equipo.php" method="POST">
-                            <input  name="usuario_id" value="<?php echo $usuario_id; ?>">
+                        <form action="procesar_entrega_todo.php" method="POST">
+                        <input type="hidden" name="usuario_id" value="<?php echo $usuario_id; ?>">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <?php if (count($prestamos) > 0) : ?>
