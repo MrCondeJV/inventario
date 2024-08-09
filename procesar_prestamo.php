@@ -155,7 +155,7 @@ foreach ($equipos as $equipo_id => $equipo_data) {
 }
 
 // Guardar los cambios en una nueva plantilla de Excel con nombre único
-$newTemplatePath = './assets/actas/PRESTAMO_' . $codigo_prestamo . '.xlsx';
+$newTemplatePath = './assets/actas/' . $codigo_prestamo . '.xlsx';
 $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 $writer->save($newTemplatePath);
 
