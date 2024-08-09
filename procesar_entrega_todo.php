@@ -62,32 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
     }
     $usuario_stmt->close();
 
-    function generateUniqueLoanCode($mysqli) {
-        $prefix = 'PRESTAMO-'; // Prefijo para el código de préstamo
-        $suffix = substr(md5(uniqid(mt_rand(), true)), 0, 6); // Sufijo único de 6 caracteres
     
-        // Generar un código de préstamo único combinando prefijo y sufijo
-        $cod_entrega = $prefix . $suffix;
-    
-        // Verificar si el código ya existe en la base de datos
-        $check_stmt = $mysqli->prepare("SELECT COUNT(*) FROM entregas WHERE Cod_entrega = ?");
-        $count=0;
-        $check_stmt->bind_param("s", $cod_entrega);
-        $check_stmt->execute();
-        $check_stmt->bind_result($count);
-        $check_stmt->fetch();
-        $check_stmt->close();
-    
-        // Si el código existe, generar uno nuevo recursivamente
-        if ($count > 0) {
-            return generateUniqueLoanCode($mysqli); // Llamada recursiva para generar otro código
-        } else {
-            return $cod_entrega; // Devuelve el código único generado
-        }
-    }
 
-    $cod_entrega = generateUniqueLoanCode($mysqli);
-    
     $prestamos = [];
     if ($stmt = $mysqli->prepare("
         SELECT dp.id, dp.serie_equipo, dp.cantidad_prestada 
@@ -112,6 +88,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
     }
 
     $mysqli->begin_transaction();
+
+    function generateUniqueLoanCode($mysqli) {
+        $prefix = 'ENTREGA-'; // Prefijo para el código de ENTREGA
+        $suffix = substr(md5(uniqid(mt_rand(), true)), 0, 6); // Sufijo único de 6 caracteres
+    
+        // Generar un código de ENTREGA único combinando prefijo y sufijo
+        $cod_entrega = $prefix . $suffix;
+    
+        // Verificar si el código ya existe en la base de datos
+        $check_stmt = $mysqli->prepare("SELECT COUNT(*) FROM entregas WHERE Cod_entrega = ?");
+        $count=0;
+        $check_stmt->bind_param("s", $cod_entrega);
+        $check_stmt->execute();
+        $check_stmt->bind_result($count);
+        $check_stmt->fetch();
+        $check_stmt->close();
+    
+        // Si el código existe, generar uno nuevo recursivamente
+        if ($count > 0) {
+            return generateUniqueLoanCode($mysqli); // Llamada recursiva para generar otro código
+        } else {
+            return $cod_entrega; // Devuelve el código único generado
+        }
+    }
+
+    $cod_entrega = generateUniqueLoanCode($mysqli);
 
     try {
         $fecha_entregado = date('Y-m-d H:i:s');
