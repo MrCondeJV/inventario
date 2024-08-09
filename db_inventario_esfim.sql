@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 27, 2024 at 10:03 PM
+-- Generation Time: Aug 09, 2024 at 08:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,6 +38,20 @@ CREATE TABLE `detalles_entrega` (
   `Estado` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `detalles_entrega`
+--
+
+INSERT INTO `detalles_entrega` (`id`, `id_entrega`, `usuario_id`, `Nombre_usuario`, `Serie_equipo`, `Equipo`, `Cantidad_entregada`, `Estado`) VALUES
+(90, 125, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 2, 'Entregado'),
+(91, 125, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 1, 'Entregado'),
+(92, 125, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 2, 'Entregado'),
+(93, 125, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 1, 'Entregado'),
+(94, 126, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 1, 'Entregado'),
+(95, 126, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 1, 'Entregado'),
+(96, 126, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 1, 'Entregado'),
+(97, 126, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 1, 'Entregado');
+
 -- --------------------------------------------------------
 
 --
@@ -55,22 +69,6 @@ CREATE TABLE `detalles_prestamo` (
   `Estado` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `detalles_prestamo`
---
-
-INSERT INTO `detalles_prestamo` (`id`, `id_prestamo`, `usuario_id`, `Nombre_usuario`, `Serie_equipo`, `Equipo`, `Cantidad_prestada`, `Estado`) VALUES
-(29, 14, 1, 'Luis Barrios', 'PT002', 'Cabina Yamaha', 1, '0'),
-(30, 14, 1, 'Luis Barrios', 'PT001', 'Pantalla HP', 1, '0'),
-(31, 14, 1, 'Luis Barrios', 'PT003', 'Impresora HP', 1, '0'),
-(32, 14, 1, 'Luis Barrios', 'PT004', 'Camara', 1, '0'),
-(33, 15, 4, 'Alexis Paternina', 'PT002', 'Cabina Yamaha', 1, '0'),
-(34, 15, 4, 'Alexis Paternina', 'PT001', 'Pantalla HP', 1, '0'),
-(35, 15, 4, 'Alexis Paternina', 'PT003', 'Impresora HP', 1, '0'),
-(36, 15, 4, 'Alexis Paternina', 'PT004', 'Camara', 1, '0'),
-(37, 16, 9, 'pepito', 'PT002', 'Cabina Yamaha', 2, '0'),
-(38, 16, 9, 'pepito', 'PT001', 'Pantalla HP', 1, '0');
-
 -- --------------------------------------------------------
 
 --
@@ -82,8 +80,18 @@ CREATE TABLE `entregas` (
   `Cod_entrega` varchar(50) NOT NULL,
   `usuario_id` int(11) NOT NULL,
   `Nombre_usuario` varchar(100) NOT NULL,
-  `Fecha_entregado` datetime NOT NULL
+  `Fecha_entregado` datetime NOT NULL,
+  `Recomendaciones` varchar(500) NOT NULL,
+  `Observaciones` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `entregas`
+--
+
+INSERT INTO `entregas` (`id`, `Cod_entrega`, `usuario_id`, `Nombre_usuario`, `Fecha_entregado`, `Recomendaciones`, `Observaciones`) VALUES
+(125, 'ENTREGA-66b53411cd3f34.16155832', 1, 'Luis Barrios', '2024-08-08 23:09:37', 'HJGHJGH', 'SDFSDF'),
+(126, 'ENTREGA-66b5355264a086.69198110', 1, 'Luis Barrios', '2024-08-08 23:14:58', 'NINGUNA', 'SDFSD');
 
 -- --------------------------------------------------------
 
@@ -106,10 +114,10 @@ CREATE TABLE `equipos` (
 --
 
 INSERT INTO `equipos` (`id`, `Serie`, `Nombre`, `Categoria`, `Estado`, `Cantidad`, `Imagen`) VALUES
-(4, 'PT002', 'Cabina Yamaha', 'Tecnologia', 'Bueno', 0, 0x6173736574732f696d672f65717569706f732f636162696e612e6a7067),
-(5, 'PT001', 'Pantalla HP', 'Tecnologia', 'Bueno', 1, 0x6173736574732f696d672f65717569706f732f70616e74616c6c2068702e6a7067),
-(7, 'PT003', 'Impresora HP', 'Tecnologia', 'Bueno', 2, 0x6173736574732f696d672f65717569706f732f696d707265736f72612e6a7067),
-(8, 'PT004', 'Camara', 'Tecnologia', 'Bueno', 2, 0x6173736574732f696d672f65717569706f732f696d707265736f72612e6a7067);
+(4, 'PT002', 'Cabina Yamaha', 'Tecnologia', 'Bueno', 4, 0x6173736574732f696d672f65717569706f732f636162696e612e6a7067),
+(5, 'PT001', 'Pantalla HP', 'Tecnologia', 'Bueno', 4, 0x6173736574732f696d672f65717569706f732f70616e74616c6c2068702e6a7067),
+(7, 'PT003', 'Impresora HP', 'Tecnologia', 'Bueno', 4, 0x6173736574732f696d672f65717569706f732f696d707265736f72612e6a7067),
+(8, 'PT004', 'Camara', 'Tecnologia', 'Bueno', 4, 0x6173736574732f696d672f65717569706f732f696d707265736f72612e6a7067);
 
 -- --------------------------------------------------------
 
@@ -132,9 +140,8 @@ CREATE TABLE `prestamos` (
 --
 
 INSERT INTO `prestamos` (`id`, `Cod_prestamo`, `usuario_id`, `Nombre_usuario`, `Fecha_prestamo`, `Recomendaciones`, `Observaciones`) VALUES
-(14, 'PR-1ee298', 1, 'Luis Barrios', '2024-06-27 19:25:46', 'dfsfs', 'sdfsdf'),
-(15, 'PR-c3e76b', 4, 'Alexis Paternina', '2024-06-27 21:20:19', 'gfhfghfgxhfg', 'tredsfsdfsdvdfgdf'),
-(16, 'PR-253ed9', 9, 'pepito', '2024-06-27 21:20:54', 'hfgxhf', 'drsfs');
+(50, 'PRESTAMO-2c5013', 1, 'Luis Barrios', '2024-08-08 23:09:13', 'SDFSDF', 'SDFSDFS'),
+(51, 'PRESTAMO-557217', 1, 'Luis Barrios', '2024-08-08 23:13:51', 'NINGUNA', 'NINGUNA');
 
 -- --------------------------------------------------------
 
@@ -246,19 +253,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `detalles_entrega`
 --
 ALTER TABLE `detalles_entrega`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `detalles_prestamo`
 --
 ALTER TABLE `detalles_prestamo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
 
 --
 -- AUTO_INCREMENT for table `entregas`
 --
 ALTER TABLE `entregas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT for table `equipos`
@@ -270,7 +277,7 @@ ALTER TABLE `equipos`
 -- AUTO_INCREMENT for table `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `rol`

@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit();
@@ -72,6 +76,10 @@ foreach ($equipos as $equipo_id => $equipo_data) {
         $equipo_stmt->bind_param("i", $equipo_id);
         $equipo_stmt->execute();
         $equipo_result = $equipo_stmt->get_result();
+        if ($equipo_result->num_rows === 0) {
+            echo "No se encontró el equipo con ID: $equipo_id";
+            continue; // Pasar al siguiente equipo
+        }
         $equipo_row = $equipo_result->fetch_assoc();
         $serie_equipo = $equipo_row['Serie'];
         $nombre_equipo = $equipo_row['Nombre'];
@@ -80,17 +88,28 @@ foreach ($equipos as $equipo_id => $equipo_data) {
 
         // Insertar detalle de préstamo en la tabla detalle_prestamo
         $detalle_stmt = $mysqli->prepare("INSERT INTO detalles_prestamo (id_prestamo, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_prestada, Estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $detalle_stmt->bind_param("iissssi", $prestamo_id,$usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $cantidad_prestada, $estado_equipo);
-        $detalle_stmt->execute();
+        if (!$detalle_stmt) {
+            die('Error en la preparación de la consulta: ' . $mysqli->error);
+        }
+        $detalle_stmt->bind_param("iissssi", $prestamo_id, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $cantidad_prestada, $estado_equipo);
+        if (!$detalle_stmt->execute()) {
+            echo 'Error al insertar detalle de préstamo: ' . $detalle_stmt->error;
+        }
         $detalle_stmt->close();
 
         // Actualizar la cantidad en la tabla equipos
         $update_stmt = $mysqli->prepare("UPDATE equipos SET Cantidad = Cantidad - ? WHERE id = ?");
+        if (!$update_stmt) {
+            die('Error en la preparación de la consulta: ' . $mysqli->error);
+        }
         $update_stmt->bind_param("ii", $cantidad_prestada, $equipo_id);
-        $update_stmt->execute();
+        if (!$update_stmt->execute()) {
+            echo 'Error al actualizar equipo: ' . $update_stmt->error;
+        }
         $update_stmt->close();
     }
 }
+
 
 // Ruta de la plantilla de Excel existente
 $templatePath = './assets/actas/PRESTAMO.xlsx';
