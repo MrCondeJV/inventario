@@ -214,7 +214,7 @@ VALUES (?, ?, ?, ?, ?, ?, 'Entregado')
         }
 
         // Guardar los cambios en una nueva plantilla de Excel con nombre único
-        $newTemplatePath = './assets/actas/ENTREGA_' . uniqid() . '.xlsx';
+        $newTemplatePath = './assets/actas/ENTREGA_' . $cod_entrega . '.xlsx';
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save($newTemplatePath);
 
