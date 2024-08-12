@@ -32,6 +32,32 @@ $cargo_usuario = $usuario_row['cargo'];
 $unidad_usuario = $usuario_row['unidad'];
 $usuario_stmt->close();
 
+// Verificar disponibilidad de equipos
+foreach ($equipos as $equipo_id => $equipo_data) {
+    if (isset($equipo_data['seleccionado'])) {
+        $cantidad_prestada = (int)$equipo_data['cantidad'];
+
+        // Obtener la cantidad disponible del equipo
+        $equipo_stmt = $mysqli->prepare("SELECT Cantidad FROM equipos WHERE id = ?");
+        $equipo_stmt->bind_param("i", $equipo_id);
+        $equipo_stmt->execute();
+        $equipo_result = $equipo_stmt->get_result();
+        if ($equipo_result->num_rows === 0) {
+            echo "No se encontró el equipo con ID: $equipo_id";
+            exit(); // Salir del script si no se encuentra el equipo
+        }
+        $equipo_row = $equipo_result->fetch_assoc();
+        $cantidad_disponible = $equipo_row['Cantidad'];
+        $equipo_stmt->close();
+
+        // Verificar si la cantidad pedida es mayor que la disponible
+        if ($cantidad_prestada > $cantidad_disponible) {
+            echo "La cantidad solicitada para el equipo ID: $equipo_id excede la cantidad disponible.";
+            exit(); // Salir del script si la cantidad excede la disponible
+        }
+    }
+}
+
 // Generar un código de préstamo único
 function generateUniqueLoanCode($mysqli) {
     $prefix = 'PRESTAMO-'; // Prefijo para el código de préstamo
@@ -110,7 +136,6 @@ foreach ($equipos as $equipo_id => $equipo_data) {
     }
 }
 
-
 // Ruta de la plantilla de Excel existente
 $templatePath = './assets/actas/PRESTAMO.xlsx';
 
@@ -118,22 +143,22 @@ $templatePath = './assets/actas/PRESTAMO.xlsx';
 $spreadsheet = IOFactory::load($templatePath);
 $sheet = $spreadsheet->getActiveSheet();
 
-// Encuentra las celdas donde deseas insertar los datos
-$sheet->setCellValue('B6', $codigo_prestamo); // Código de Préstamo
-$sheet->setCellValue('B8', $nombre_usuario); // Nombre de Usuario
-$sheet->setCellValue('B7', $fecha_prestamo); // Fecha de Préstamo
-$sheet->setCellValue('B26', $recomendaciones); // Recomendaciones Técnicas
-$sheet->setCellValue('B40', $observaciones); // Observaciones
-$sheet->setCellValue('J8', $cargo_usuario); // Cargo
-$sheet->setCellValue('B9', $unidad_usuario); // Unidad
 
-$row = 3; // Fila inicial para los datos de equipos
+$sheet->setCellValue('B6', $codigo_prestamo);
+$sheet->setCellValue('B8', $nombre_usuario); 
+$sheet->setCellValue('B7', $fecha_prestamo); 
+$sheet->setCellValue('B26', $recomendaciones); 
+$sheet->setCellValue('B40', $observaciones); 
+$sheet->setCellValue('J8', $cargo_usuario); 
+$sheet->setCellValue('B9', $unidad_usuario); 
+
+$row = 3; 
 
 foreach ($equipos as $equipo_id => $equipo_data) {
     if (isset($equipo_data['seleccionado'])) {
         $cantidad_prestada = (int)$equipo_data['cantidad'];
 
-        // Obtener detalles del equipo
+     
         $equipo_stmt = $mysqli->prepare("SELECT Nombre, Serie, Estado  FROM equipos WHERE id = ?");
         $equipo_stmt->bind_param("i", $equipo_id);
         $equipo_stmt->execute();
@@ -144,23 +169,21 @@ foreach ($equipos as $equipo_id => $equipo_data) {
         $estado_equipo = $equipo_row['Estado'];
         $equipo_stmt->close();
 
-        // Insertar datos del equipo en las celdas correspondientes
-        $sheet->setCellValue('C' . (10 + $row), $nombre_equipo); // Nombre del Equipo
-        $sheet->setCellValue('L' . (10 + $row), $serie_equipo); // Serie del Equipo
-        $sheet->setCellValue('B' . (10 + $row), $cantidad_prestada); // Cantidad Prestada
-        $sheet->setCellValue('N' . (10 + $row), $estado_equipo); // Estado del Equipo
+        
+        $sheet->setCellValue('C' . (10 + $row), $nombre_equipo); 
+        $sheet->setCellValue('L' . (10 + $row), $serie_equipo); 
+        $sheet->setCellValue('B' . (10 + $row), $cantidad_prestada); 
+        $sheet->setCellValue('N' . (10 + $row), $estado_equipo); 
 
-        $row++; // Incrementar la fila para el siguiente equipo
+        $row++; 
     }
 }
 
-// Guardar los cambios en una nueva plantilla de Excel con nombre único
-$newTemplatePath = './assets/actas/' . $codigo_prestamo . '.xlsx';
+$newTemplatePath = './assets/actas/prestamos/' . $codigo_prestamo . '.xlsx';
 $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 $writer->save($newTemplatePath);
 
-// Cambiar permisos en el archivo recién creado (ejemplo de permisos)
-chmod($newTemplatePath, 0644); // Establecer permisos para lectura/escritura para el propietario y solo lectura para los demás
+chmod($newTemplatePath, 0644); 
 
 // Redirigir o hacer cualquier otra operación después de guardar los datos en la plantilla
 header("Location: index.php?prestamo=exito");

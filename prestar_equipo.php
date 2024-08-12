@@ -273,6 +273,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios")) {
             });
         });
     </script>
+    
 </body>
 
 </html>
