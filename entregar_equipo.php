@@ -147,6 +147,17 @@ if (isset($_POST['entregar_todo'])) {
                                 <li><a href="userlists.php">Lista Usuarios</a></li>
                             </ul>
                         </li>
+
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img" /><span>
+                                    Usuarios Prestamos</span>
+                                <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="newuser.php">Nuevo Usuario </a></li>
+                                <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
+                            </ul>
+                        </li>
+
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="settings-icon" /><span>
                                     Acciones</span>

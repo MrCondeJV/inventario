@@ -37,7 +37,7 @@ $rol = $_SESSION['ID_Rol']
 </head>
 
 <body>
-<div id="global-loader">
+  <div id="global-loader">
     <div class="whirly-loader"></div>
   </div>
   <div class="main-wrapper">
@@ -117,6 +117,17 @@ $rol = $_SESSION['ID_Rol']
                 <li><a href="userlists.php">Lista Usuarios</a></li>
               </ul>
             </li>
+
+            <li class="submenu">
+              <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img" /><span>
+                  Usuarios Prestamos</span>
+                <span class="menu-arrow"></span></a>
+              <ul>
+                <li><a href="newuser.php">Nuevo Usuario </a></li>
+                <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
+              </ul>
+            </li>
+
             <li class="submenu">
               <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
                   Acciones</span>

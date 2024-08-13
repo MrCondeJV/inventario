@@ -37,7 +37,7 @@ $rol = $_SESSION['ID_Rol']
 </head>
 
 <body>
-<div id="global-loader">
+  <div id="global-loader">
     <div class="whirly-loader"></div>
   </div>
   <div class="main-wrapper">
@@ -117,6 +117,17 @@ $rol = $_SESSION['ID_Rol']
                 <li><a href="userlists.php">Lista Usuarios</a></li>
               </ul>
             </li>
+
+            <li class="submenu">
+              <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img" /><span>
+                  Usuarios Prestamos</span>
+                <span class="menu-arrow"></span></a>
+              <ul>
+                <li><a href="newuser.php">Nuevo Usuario </a></li>
+                <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
+              </ul>
+            </li>
+
             <li class="submenu">
               <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
                   Acciones</span>
@@ -133,75 +144,75 @@ $rol = $_SESSION['ID_Rol']
   </div>
 
 
-    <div class="page-wrapper">
-      <div class="content">
-        <div class="page-header">
-          <div class="page-title">
-            <h4>Administración de usuarios</h4>
-            <h6>Agregar Usuario</h6>
-          </div>
+  <div class="page-wrapper">
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title">
+          <h4>Administración de usuarios</h4>
+          <h6>Agregar Usuario</h6>
         </div>
+      </div>
 
-        <div class="card shadow">
-          <div class="card-body">
-            <form action="agregar_usuario.php" method="post" >
-              <div class="row">
-                <div class="col-lg-3 col-sm-6 col-12">
-                  <div class="form-group">
-                    <label>Documento</label>
-                    <input type="text" name="Documento" />
-                  </div>
-                  <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" name="Nombre" />
-                  </div>
-                  <div class="form-group">
-                    <label>Cargo</label>
-                    <input type="text" name="Cargo" />
-                  </div>
-                  <div class="form-group">
-
-                  </div>
+      <div class="card shadow">
+        <div class="card-body">
+          <form action="agregar_usuario.php" method="post">
+            <div class="row">
+              <div class="col-lg-3 col-sm-6 col-12">
+                <div class="form-group">
+                  <label>Documento</label>
+                  <input type="text" name="Documento" />
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-                  <div class="form-group">
-                    <label>Unidad</label>
-                    <input type="text" name="Unidad" />
-                  </div>
-                  <div class="form-group">
-                    <label>Usuario</label>
-                    <input type="text" name="Usuario" />
-                  </div>
-
-                  <div class="form-group">
-                    <label>Contraseña</label>
-                    <div class="pass-group">
-                      <input type="password" class="pass-inputs" name="contrasena" />
-                      <span class="fas toggle-passworda fa-eye-slash"></span>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label>Role</label>
-                    <select class="select" name="Rol">
-                      <option>Select</option>
-                      <option>1. Administrador</option>
-                      <option>2. Observador</option>
-                    </select>
-                  </div>
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input type="text" name="Nombre" />
                 </div>
-                <div class="col-lg-3 col-sm-6 col-12">
-
+                <div class="form-group">
+                  <label>Cargo</label>
+                  <input type="text" name="Cargo" />
                 </div>
-                <div class="col-lg-12">
-                  <button type="submit" class="btn btn-success me-2">Guardar</button>
-                  <a href="userlists.php" class="btn btn-danger">Cancel</a>
+                <div class="form-group">
+
                 </div>
               </div>
-            </form>
-          </div>
+              <div class="col-lg-3 col-sm-6 col-12">
+                <div class="form-group">
+                  <label>Unidad</label>
+                  <input type="text" name="Unidad" />
+                </div>
+                <div class="form-group">
+                  <label>Usuario</label>
+                  <input type="text" name="Usuario" />
+                </div>
+
+                <div class="form-group">
+                  <label>Contraseña</label>
+                  <div class="pass-group">
+                    <input type="password" class="pass-inputs" name="contrasena" />
+                    <span class="fas toggle-passworda fa-eye-slash"></span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Role</label>
+                  <select class="select" name="Rol">
+                    <option>Select</option>
+                    <option>1. Administrador</option>
+                    <option>2. Observador</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-3 col-sm-6 col-12">
+
+              </div>
+              <div class="col-lg-12">
+                <button type="submit" class="btn btn-success me-2">Guardar</button>
+                <a href="userlists.php" class="btn btn-danger">Cancel</a>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <script src="assets/js/jquery-3.6.0.min.js"></script>
