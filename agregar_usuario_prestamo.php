@@ -13,10 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   include "./conexion.php";
   
   // Recibir y limpiar los datos del formulario
-  $documento = $_POST['documento'];
-  $nombre = $_POST['nombre'];
-  $cargo = $_POST['cargo'];
-  $unidad = $_POST['unidad'];
+  $documento = $_POST['Documento'];
+  $nombre = $_POST['Nombre'];
+  $cargo = $_POST['Cargo'];
+  $unidad = $_POST['Unidad'];
 
   
 

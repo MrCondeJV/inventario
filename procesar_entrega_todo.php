@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
         exit();
     }
 
-    $usuario_stmt = $mysqli->prepare("SELECT nombre, cargo, unidad FROM usuarios WHERE id = ?");
+    $usuario_stmt = $mysqli->prepare("SELECT nombre, cargo, unidad FROM usuarios_prestamo WHERE id = ?");
     $usuario_stmt->bind_param("i", $usuario_id);
     $usuario_stmt->execute();
     $usuario_result = $usuario_stmt->get_result();

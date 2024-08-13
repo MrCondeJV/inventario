@@ -32,10 +32,10 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $Documento = trim($_POST['documento']);
-  $Nombre = trim($_POST['nombre']);
-  $Cargo = trim($_POST['cargo']);
-  $Unidad = trim($_POST['unidad']);
+  $Documento = trim($_POST['Documento']);
+  $Nombre = trim($_POST['Nombre']);
+  $Cargo = trim($_POST['Cargo']);
+  $Unidad = trim($_POST['Unidad']);
  
 
   // Validar campos
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   } else {
     // Actualizar el usuario en la base de datos
     $stmt = $mysqli->prepare("UPDATE usuarios_prestamo SET documento = ?, nombre = ?, cargo = ?, unidad  = ? WHERE id = ?");
-    $stmt->bind_param("sssss", $Documento, $Nombre, $Cargo, $Unidad, $Usuario, $contrasena, $Rol, $id_usuario);
+    $stmt->bind_param("ssssi", $Documento, $Nombre, $Cargo, $Unidad, $id_usuario);
 
     if ($stmt->execute()) {
       header("Location: userlists_prestamo.php");
@@ -170,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   Usuarios Prestamos</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-                <li><a href="newuser.php">Nuevo Usuario </a></li>
+                <li><a href="newuser_prestamo.php">Nuevo Usuario </a></li>
                 <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
               </ul>
             </li>

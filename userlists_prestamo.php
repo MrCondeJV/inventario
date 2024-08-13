@@ -1,6 +1,10 @@
 ﻿<?php
 session_start();
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if (!isset($_SESSION['id'])) {
   header("Location: login.php");
   exit();
@@ -8,7 +12,7 @@ if (!isset($_SESSION['id'])) {
 
 
 $nombre = $_SESSION['nombre'];
-$rol = $_SESSION['ID_Rol']
+$rol = $_SESSION['ID_Rol'];
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +22,7 @@ $rol = $_SESSION['ID_Rol']
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
 
-  <title>Lista Usuarios | ESFIM</title>
+  <title>Lista Usuarios 1| ESFIM</title>
 
   <link rel="shortcut icon" type="image/x-icon" href="assets/img/logos/esfim_logo.png" />
 
@@ -123,7 +127,7 @@ $rol = $_SESSION['ID_Rol']
                   Usuarios Prestamos</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-                <li><a href="newuser.php">Nuevo Usuario </a></li>
+                <li><a href="newuser_prestamo.php">Nuevo Usuario </a></li>
                 <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
               </ul>
             </li>
@@ -151,7 +155,7 @@ $rol = $_SESSION['ID_Rol']
           <h6>Administra tu usuario</h6>
         </div>
         <div class="page-btn">
-          <a href="newuser.php" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img" />Agregar Usuarios</a>
+          <a href="newuser_prestamo.php" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img" />Agregar Usuarios</a>
         </div>
       </div>
 
@@ -215,6 +219,7 @@ $rol = $_SESSION['ID_Rol']
                   <th>Nombre</th>
                   <th>Cargo</th>
                   <th>Unidad</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -228,12 +233,11 @@ $rol = $_SESSION['ID_Rol']
                     <td><?php echo $datos->nombre ?></td>
                     <td><?php echo $datos->cargo ?></td>
                     <td><?php echo $datos->unidad ?></td>
-                  
                     <td>
-                      <a class="me-3" href="newuseredit.php?id=<?php echo $datos->id ?>">
+                      <a class="me-3" href="newuseredit_prestamo.php?id=<?php echo $datos->id ?>">
                         <img src="assets/img/icons/edit.svg" alt="img" />
                       </a>
-                      <a class="me-3 " href="eliminar_usuario.php?id=<?php echo $datos->id; ?>">
+                      <a class="me-3 " href="eliminar_usuario_prestamo.php?id=<?php echo $datos->id; ?>">
                         <img src="assets/img/icons/delete.svg" alt="img" />
                       </a>
                     </td>

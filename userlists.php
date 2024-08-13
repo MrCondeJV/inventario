@@ -8,7 +8,7 @@ if (!isset($_SESSION['id'])) {
 
 
 $nombre = $_SESSION['nombre'];
-$rol = $_SESSION['ID_Rol']
+$rol = $_SESSION['ID_Rol'];
 ?>
 
 <!DOCTYPE html>
@@ -123,7 +123,7 @@ $rol = $_SESSION['ID_Rol']
                   Usuarios Prestamos</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-                <li><a href="newuser.php">Nuevo Usuario </a></li>
+                <li><a href="newuser_prestamo.php">Nuevo Usuario </a></li>
                 <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
               </ul>
             </li>

@@ -16,7 +16,7 @@ $rol = $_SESSION['ID_Rol'];
 
 // Obtener la lista de usuarios
 $usuarios = [];
-$usuarios_stmt = $mysqli->query("SELECT id, nombre FROM usuarios");
+$usuarios_stmt = $mysqli->query("SELECT id, nombre FROM usuarios_prestamo");
 if ($usuarios_stmt) {
     $usuarios = $usuarios_stmt->fetch_all(MYSQLI_ASSOC);
 }
@@ -153,7 +153,7 @@ if (isset($_POST['entregar_todo'])) {
                                     Usuarios Prestamos</span>
                                 <span class="menu-arrow"></span></a>
                             <ul>
-                                <li><a href="newuser.php">Nuevo Usuario </a></li>
+                                <li><a href="newuser_prestamo.php">Nuevo Usuario </a></li>
                                 <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
                             </ul>
                         </li>

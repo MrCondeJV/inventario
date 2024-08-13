@@ -24,7 +24,7 @@ if ($equipos_stmt = $mysqli->prepare("SELECT id, Nombre FROM equipos")) {
 
 // Obtener la lista de usuarios de la base de datos
 $usuarios = [];
-if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios")) {
+if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo")) {
     $usuarios_stmt->execute();
     $usuarios_result = $usuarios_stmt->get_result();
     while ($row = $usuarios_result->fetch_assoc()) {
@@ -135,7 +135,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios")) {
                                     Usuarios Prestamos</span>
                                 <span class="menu-arrow"></span></a>
                             <ul>
-                                <li><a href="newuser.php">Nuevo Usuario </a></li>
+                                <li><a href="newuser_prestamo.php">Nuevo Usuario </a></li>
                                 <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
                             </ul>
                         </li>
