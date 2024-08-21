@@ -1,0 +1,2 @@
+[15-Aug-2024 16:49:39 Europe/Berlin] PHP Warning:  foreach() argument must be of type array|object, string given in C:\xampp\htdocs\inventario\procesar_entrega_todo.php on line 219
+[15-Aug-2024 17:02:48 Europe/Berlin] PHP Warning:  foreach() argument must be of type array|object, string given in C:\xampp\htdocs\inventario\procesar_entrega_todo.php on line 210

@@ -137,6 +137,7 @@ $rol = $_SESSION['ID_Rol'];
                   Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
+              <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
                 <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
                 <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
               </ul>

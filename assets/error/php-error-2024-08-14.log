@@ -1,0 +1,5 @@
+[14-Aug-2024 22:14:51 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\inventario\procesar_prestamo.php on line 140
+[14-Aug-2024 22:14:51 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\inventario\procesar_prestamo.php on line 140
+[14-Aug-2024 22:14:51 Europe/Berlin] PHP Warning:  Array to string conversion in C:\xampp\htdocs\inventario\procesar_prestamo.php on line 140
+[14-Aug-2024 22:57:26 Europe/Berlin] Error procesando las devoluciones: Unknown column 'Placa' in 'field list'
+[14-Aug-2024 23:10:48 Europe/Berlin] PHP Warning:  foreach() argument must be of type array|object, string given in C:\xampp\htdocs\inventario\procesar_entrega_todo.php on line 219

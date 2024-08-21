@@ -166,7 +166,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
 
             <div class="card shadow">
                 <div class="card-body">
-                    <form action="procesar_prestamo.php" method="post">
+                    <form action="procesar_asignacion.php" method="post">
                         <div class="row">
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">

@@ -74,14 +74,14 @@ foreach ($equipos as $equipo_id => $equipo_data) {
 
 // Generar un código de préstamo único
 function generateUniqueLoanCode($mysqli) {
-    $prefix = 'PRESTAMO-'; // Prefijo para el código de préstamo
+    $prefix = 'ASIGNACION-'; // Prefijo para el código de préstamo
     $suffix = substr(md5(uniqid(mt_rand(), true)), 0, 6); // Sufijo único de 6 caracteres
 
     // Generar un código de préstamo único combinando prefijo y sufijo
     $codigo_prestamo = $prefix . $suffix;
 
     // Verificar si el código ya existe en la base de datos
-    $check_stmt = $mysqli->prepare("SELECT COUNT(*) FROM prestamos WHERE Cod_prestamo = ?");
+    $check_stmt = $mysqli->prepare("SELECT COUNT(*) FROM equipos_asignados WHERE id_asignacion = ?");
     $count = 0;
     $check_stmt->bind_param("s", $codigo_prestamo);
     $check_stmt->execute();
@@ -99,12 +99,7 @@ function generateUniqueLoanCode($mysqli) {
 
 $codigo_prestamo = generateUniqueLoanCode($mysqli);
 
-// Insertar el préstamo en la tabla prestamos
-$prestamo_stmt = $mysqli->prepare("INSERT INTO prestamos (Cod_prestamo, usuario_id, Nombre_usuario, Fecha_prestamo, Recomendaciones, Observaciones) VALUES (?, ?, ?, ?, ?, ?)");
-$prestamo_stmt->bind_param("sissss", $codigo_prestamo, $usuario_id, $nombre_usuario, $fecha_prestamo, $recomendaciones, $observaciones);
-$prestamo_stmt->execute();
-$prestamo_id = $prestamo_stmt->insert_id;
-$prestamo_stmt->close();
+
 
 // Insertar detalles del préstamo en la tabla detalle_prestamo
 foreach ($equipos as $equipo_id => $equipo_data) {

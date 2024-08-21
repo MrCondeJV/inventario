@@ -167,10 +167,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               </ul>
             </li>
             <li class="submenu">
+              <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img" /><span>
+                  Usuarios Prestamos</span>
+                <span class="menu-arrow"></span></a>
+              <ul>
+                <li><a href="newuser_prestamo.php">Nuevo Usuario </a></li>
+                <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
+              </ul>
+            </li>
+            <li class="submenu">
               <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
                   Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
+                <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
                 <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
                 <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
               </ul>

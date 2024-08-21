@@ -18,7 +18,10 @@ $rol = $_SESSION['ID_Rol']
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
   <title>Agregar Producto | ESFIM</title>
+  
+  //Logo De plataforma
   <link rel="shortcut icon" type="image/x-icon" href="assets/img/logos/esfim_logo.png" />
+
   <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
   <link rel="stylesheet" href="assets/css/animate.css" />
   <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css" />
@@ -125,6 +128,7 @@ $rol = $_SESSION['ID_Rol']
                   Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
+              <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
                 <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
                 <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
               </ul>

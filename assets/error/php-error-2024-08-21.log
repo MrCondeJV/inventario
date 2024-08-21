@@ -1,0 +1,5 @@
+[21-Aug-2024 15:58:25 Europe/Berlin] Error procesando las devoluciones: Column 'Equipo' cannot be null
+[21-Aug-2024 16:02:15 Europe/Berlin] PHP Warning:  foreach() argument must be of type array|object, string given in C:\xampp\htdocs\inventario\procesar_entrega_todo.php on line 224
+[21-Aug-2024 16:09:57 Europe/Berlin] Error procesando las devoluciones: Column 'placa_equipo' cannot be null
+[21-Aug-2024 16:13:54 Europe/Berlin] No se encontró placa_equipo para el préstamo ID: 136
+[21-Aug-2024 16:14:59 Europe/Berlin] PHP Warning:  foreach() argument must be of type array|object, string given in C:\xampp\htdocs\inventario\procesar_entrega_todo.php on line 232
