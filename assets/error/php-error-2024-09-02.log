@@ -1,0 +1,9 @@
+[02-Sep-2024 23:46:31 Europe/Berlin] Error procesando las devoluciones: Column 'Equipo' cannot be null
+[02-Sep-2024 23:47:23 Europe/Berlin] Valor recuperado de placa_equipo: C20000
+[02-Sep-2024 23:47:23 Europe/Berlin] Error procesando las devoluciones: Column 'Equipo' cannot be null
+[02-Sep-2024 23:49:39 Europe/Berlin] Valor recuperado de placa_equipo: C20000
+[02-Sep-2024 23:49:52 Europe/Berlin] PHP Warning:  foreach() argument must be of type array|object, string given in C:\xampp\htdocs\inventario\procesar_entrega_todo.php on line 227
+[02-Sep-2024 23:54:13 Europe/Berlin] Valor recuperado de placa_equipo: C10000
+[02-Sep-2024 23:54:26 Europe/Berlin] Error procesando las devoluciones: Unknown column 'Cantidad_asignada' in 'field list'
+[02-Sep-2024 23:56:23 Europe/Berlin] Valor recuperado de placa_equipo: C10000xxx
+[02-Sep-2024 23:56:36 Europe/Berlin] PHP Warning:  Undefined array key "placa_equipo" in C:\xampp\htdocs\inventario\procesar_entrega_todo.php on line 237

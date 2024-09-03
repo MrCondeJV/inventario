@@ -41,7 +41,7 @@ $rol = $_SESSION['ID_Rol'];
 </head>
 
 <body>
-<div id="global-loader">
+  <div id="global-loader">
     <div class="whirly-loader"></div>
   </div>
   <div class="main-wrapper">
@@ -137,10 +137,21 @@ $rol = $_SESSION['ID_Rol'];
                   Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-              <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
+                <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
                 <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
                 <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
               </ul>
+            </li>
+            <li class="submenu">
+              <a href="historial.php"><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
+                  Historial</span>
+                <span class="menu-arrow"></span></a>
+              <ul>
+                <li><a href="historial_asignaciones.php">Asignaciones</a></li>
+                <li><a href="historial_prestamos.php">Prestamos</a></li>
+                <li><a href="historial_entregas.php">Entregas</a></li>
+              </ul>
+              </a>
             </li>
           </ul>
         </div>
@@ -230,10 +241,10 @@ $rol = $_SESSION['ID_Rol'];
                   $sql = $mysqli->query("SELECT * FROM usuarios_prestamo");
                   while ($datos = $sql->fetch_object()) { ?>
                     <td><?php echo $datos->id ?></td>
-                    <td><?php echo $datos->documento ?></td>
-                    <td><?php echo $datos->nombre ?></td>
-                    <td><?php echo $datos->cargo ?></td>
-                    <td><?php echo $datos->unidad ?></td>
+                    <td><?php echo $datos->Documento ?></td>
+                    <td><?php echo $datos->Nombre ?></td>
+                    <td><?php echo $datos->Cargo ?></td>
+                    <td><?php echo $datos->Unidad ?></td>
                     <td>
                       <a class="me-3" href="newuseredit_prestamo.php?id=<?php echo $datos->id ?>">
                         <img src="assets/img/icons/edit.svg" alt="img" />

@@ -95,7 +95,7 @@ if ($_POST) {
                     </div>
                 </div>
                 <div class="login-img">
-                    <img src="assets/img/login.jpg" alt="img">
+                    <img src="assets/img/background.png" alt="img">
                 </div>
             </div>
         </div>

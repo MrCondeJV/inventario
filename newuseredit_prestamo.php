@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $Nombre = trim($_POST['Nombre']);
   $Cargo = trim($_POST['Cargo']);
   $Unidad = trim($_POST['Unidad']);
- 
+
 
   // Validar campos
   if (empty($Documento) || empty($Nombre) || empty($Cargo) || empty($Unidad)) {
@@ -180,10 +180,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-              <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
-                <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
-                <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
+                <li><a href="historial_asignaciones.php">Asignaciones</a></li>
+                <li><a href="historial_prestamos.php">Prestamos</a></li>
+                <li><a href="historial_entregas.php">Entregas</a></li>
               </ul>
+            </li>
+            <li class="submenu">
+              <a href="historial.php"><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
+                  Historial</span>
+              </a>
             </li>
           </ul>
         </div>
@@ -206,28 +211,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Documento</label>
-                  <input type="text" name="Documento" value="<?php echo htmlspecialchars($usuario['documento']); ?>" />
+                  <input type="text" name="Documento" value="<?php echo htmlspecialchars($usuario['Documento']); ?>" />
                 </div>
                 <div class="form-group">
                   <label>Nombre</label>
-                  <input type="text" name="Nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" />
+                  <input type="text" name="Nombre" value="<?php echo htmlspecialchars($usuario['Nombre']); ?>" />
                 </div>
                 <div class="form-group">
                   <label>Cargo</label>
-                  <input type="text" name="Cargo" value="<?php echo htmlspecialchars($usuario['cargo']); ?>" />
+                  <input type="text" name="Cargo" value="<?php echo htmlspecialchars($usuario['Cargo']); ?>" />
                 </div>
               </div>
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Unidad</label>
-                  <input type="text" name="Unidad" value="<?php echo htmlspecialchars($usuario['unidad']); ?>" />
+                  <input type="text" name="Unidad" value="<?php echo htmlspecialchars($usuario['Unidad']); ?>" />
                 </div>
-              
-              <div class="col-lg-12">
-                <button type="submit" class="btn btn-success me-2">Guardar</button>
-                <a href="userlists_prestamo.php" class="btn btn-danger">Cancelar</a>
+
+                <div class="col-lg-12">
+                  <button type="submit" class="btn btn-success me-2">Guardar</button>
+                  <a href="userlists_prestamo.php" class="btn btn-danger">Cancelar</a>
+                </div>
               </div>
-            </div>
           </form>
         </div>
       </div>

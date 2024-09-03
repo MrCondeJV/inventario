@@ -6,9 +6,8 @@ if (!isset($_SESSION['id'])) {
   exit();
 }
 
-
 $nombre = $_SESSION['nombre'];
-$rol = $_SESSION['ID_Rol']
+$rol = $_SESSION['ID_Rol'];
 ?>
 
 <!DOCTYPE html>
@@ -17,11 +16,9 @@ $rol = $_SESSION['ID_Rol']
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
-  <title>Agregar Producto | ESFIM</title>
-  
-  //Logo De plataforma
-  <link rel="shortcut icon" type="image/x-icon" href="assets/img/logos/esfim_logo.png" />
+  <title>Dashboard | ESFIM</title>
 
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/logos/esfim_logo.png" />
   <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
   <link rel="stylesheet" href="assets/css/animate.css" />
   <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css" />
@@ -65,10 +62,7 @@ $rol = $_SESSION['ID_Rol']
                 <span class="user-img"><img src="assets/img/profiles/avator1.jpg" alt="" />
                   <span class="status online"></span></span>
                 <div class="profilesets">
-                  <h6><?php
-                      echo $nombre;
-
-                      ?></h6>
+                  <h6><?php echo $nombre; ?></h6>
                   <h5>Admin</h5>
                 </div>
               </div>
@@ -128,19 +122,167 @@ $rol = $_SESSION['ID_Rol']
                   Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-              <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
+                <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
                 <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
                 <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
               </ul>
+            </li>
+            <li class="submenu">
+              <a href="javascript:void(0);"><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
+                  Historial</span>
+                <span class="menu-arrow"></span></a>
+              <ul>
+                <li><a href="historial_asignaciones.php">Asignaciones</a></li>
+                <li><a href="historial_prestamos.php">Prestamos</a></li>
+                <li><a href="historial_entregas.php">Entregas</a></li>
+              </ul>
+
             </li>
           </ul>
         </div>
       </div>
     </div>
+
+    <!-- Main content starts here -->
+    <div class="page-wrapper">
+      <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="row">
+            <div class="col-sm-12">
+              <h3 class="page-title">Dashboard</h3>
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item active">Inicio</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="container-fluid">
+          <div class="row">
+
+            <!-- PRESTAMOS TOTALES -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col mr-2">
+
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                        Prestamos Totales</div>
+                      
+                        <?php
+                      include "./conexion.php";
+                      $sql = $mysqli->query("SELECT COUNT(*) AS total_registros FROM prestamos");
+                      while ($datos = $sql->fetch_object()) { ?>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          <?php echo $datos->total_registros ?>
+                        </div>
+                        </td>
+                        </tr>
+                      <?php }
+                      ?>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-handshake fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- ENTREGAS TOTALES -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Entregas Totales</div>
+                        
+                      <?php
+                      include "./conexion.php";
+                      $sql = $mysqli->query("SELECT COUNT(*) AS total_registros FROM entregas");
+                      while ($datos = $sql->fetch_object()) { ?>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          <?php echo $datos->total_registros ?>
+                        </div>
+                        </td>
+                        </tr>
+                      <?php }
+                      ?>
+                      
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-box-open fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- ASIGNACIONES TOTALES -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                        Asignaciones Totales</div>
+
+                      <?php
+                      include "./conexion.php";
+                      $sql = $mysqli->query("SELECT COUNT(*) AS total_registros FROM asignaciones");
+                      while ($datos = $sql->fetch_object()) { ?>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          <?php echo $datos->total_registros ?>
+                        </div>
+                        </td>
+                        </tr>
+                      <?php }
+                      ?>
+
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Donut Chart -->
+        <div class="col-xl-4 col-lg-5">
+          <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+              <div class="chart-pie pt-4">
+                <canvas id="myPieChart"></canvas>
+              </div>
+              <hr>
+              Styling for the donut chart can be found in the
+              <code>/assets/js/demo/chart-pie-demo.js</code> file.
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
   </div>
+  <!-- /Main content ends here -->
 
-
-
+  </div>
 
   <script src="assets/js/jquery-3.6.0.min.js"></script>
   <script src="assets/js/feather.min.js"></script>
@@ -150,7 +292,14 @@ $rol = $_SESSION['ID_Rol']
   <script src="assets/js/bootstrap.bundle.min.js"></script>
   <script src="assets/plugins/apexchart/apexcharts.min.js"></script>
   <script src="assets/plugins/apexchart/chart-data.js"></script>
+  <script src="vendor/chart.js/Chart.min.js"></script>
   <script src="assets/js/script.js"></script>
+
+
+  <!-- Page level custom scripts -->
+  <script src="assets/js/demo/chart-area-demo.js"></script>
+  <script src="assets/js/demo/chart-pie-demo.js"></script>
+  <script src="assets/js/demo/chart-bar-demo.js"></script>
 </body>
 
 </html>

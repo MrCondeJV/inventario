@@ -145,10 +145,21 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                                     Acciones</span>
                                 <span class="menu-arrow"></span></a>
                             <ul>
-                            <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
+                                <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
                                 <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
                                 <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
                             </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="historial.php"><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
+                                    Historial</span>
+                                <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="historial_asignaciones.php">Asignaciones</a></li>
+                                <li><a href="historial_prestamos.php">Prestamos</a></li>
+                                <li><a href="historial_entregas.php">Entregas</a></li>
+                            </ul>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -292,47 +303,47 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
         });
     </script>
     <script>
-    $(document).ready(function() {
-        $('.cantidad-input').on('input', function() {
-            var equipoId = $(this).data('equipo-id');
-            var cantidad = $(this).val();
-            var serialesContainer = $('#seriales-' + equipoId);
-            var parentRow = $('#seriales-container-' + equipoId);
+        $(document).ready(function() {
+            $('.cantidad-input').on('input', function() {
+                var equipoId = $(this).data('equipo-id');
+                var cantidad = $(this).val();
+                var serialesContainer = $('#seriales-' + equipoId);
+                var parentRow = $('#seriales-container-' + equipoId);
 
-            // Clear previous serial fields
-            serialesContainer.empty();
+                // Clear previous serial fields
+                serialesContainer.empty();
 
-            // Show or hide the serial number input container
-            if (cantidad > 0) {
-                parentRow.show();
-                for (var i = 0; i < cantidad; i++) {
-                    serialesContainer.append(
-                        '<div class="form-group mb-2">' +
-                        '<label for="serial-' + equipoId + '-' + i + '">Serial ' + (i + 1) + '</label>' +
-                        '<input type="text" class="form-control" name="equipos[' + equipoId + '][seriales][]" id="serial-' + equipoId + '-' + i + '" required>' +
-                        '</div>'
-                    );
+                // Show or hide the serial number input container
+                if (cantidad > 0) {
+                    parentRow.show();
+                    for (var i = 0; i < cantidad; i++) {
+                        serialesContainer.append(
+                            '<div class="form-group mb-2">' +
+                            '<label for="serial-' + equipoId + '-' + i + '">Serial ' + (i + 1) + '</label>' +
+                            '<input type="text" class="form-control" name="equipos[' + equipoId + '][seriales][]" id="serial-' + equipoId + '-' + i + '" required>' +
+                            '</div>'
+                        );
+                    }
+                } else {
+                    parentRow.hide();
                 }
-            } else {
-                parentRow.hide();
-            }
-        });
+            });
 
-        $('.equipo-checkbox').on('change', function() {
-            var equipoId = $(this).data('equipo-id');
-            var isChecked = $(this).is(':checked');
-            var cantidadInput = $('input[data-equipo-id="' + equipoId + '"]');
-            var parentRow = $('#seriales-container-' + equipoId);
+            $('.equipo-checkbox').on('change', function() {
+                var equipoId = $(this).data('equipo-id');
+                var isChecked = $(this).is(':checked');
+                var cantidadInput = $('input[data-equipo-id="' + equipoId + '"]');
+                var parentRow = $('#seriales-container-' + equipoId);
 
-            if (isChecked) {
-                cantidadInput.trigger('input');
-            } else {
-                parentRow.hide();
-                $('#seriales-' + equipoId).empty();
-            }
+                if (isChecked) {
+                    cantidadInput.trigger('input');
+                } else {
+                    parentRow.hide();
+                    $('#seriales-' + equipoId).empty();
+                }
+            });
         });
-    });
-</script>
+    </script>
 
     <script>
         function generateSerialInputs(cantidadInput, equipoId) {

@@ -137,14 +137,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
             $stmt_placa->bind_result($placa_equipo);
             $stmt_placa->fetch();
             $stmt_placa->close();
-            
-            if (empty($placa_equipo)) {
-                error_log("No se encontró placa_equipo para el préstamo ID: " . $prestamo_id);
-                $mysqli->rollback();
-                header("Location: entregar_equipo.php?usuario_id=" . $usuario_id . "&error=1");
-                exit();
-            }
-            
+
+            error_log("Valor recuperado de placa_equipo: " . $placa_equipo);
+
 
             // Actualizar la cantidad en la tabla `equipos`
             if ($stmt = $mysqli->prepare("UPDATE equipos SET Cantidad = Cantidad + ? WHERE Serie = ?")) {
@@ -172,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
         INSERT INTO detalles_entrega (id_entrega, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_entregada, placa_equipo, Estado)
         VALUES (?, ?, ?, ?, ?, ?, ?, 'Entregado')
     ")) {
-                $stmt_detalle->bind_param("iissssi", $id_entrega, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $cantidad_entregada, $placa_equipo);
+                $stmt_detalle->bind_param("iisssss", $id_entrega, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $cantidad_entregada, $placa_equipo);
                 if (!$stmt_detalle->execute()) {
                     throw new Exception("Error en la ejecución de la inserción de detalles de entrega: " . $stmt_detalle->error);
                 }
@@ -227,30 +222,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
         $sheet->setCellValue('J8', $cargo_usuario); // Cargo
         $sheet->setCellValue('B9', $unidad_usuario); // Unidad
 
-        // Insertar detalles de los equipos entregados
-       
-        foreach ($equipos as $equipo) {
-            $nombre_equipo = $equipo['nombre'];
-            $cantidad_prestada = (int)$equipo['cantidad'];
+        $row = 3;
 
-            // Obtener detalles del equipo usando el nombre
-            $equipo_stmt = $mysqli->prepare("SELECT Serie, Estado FROM equipos WHERE Nombre = ?");
-            $equipo_stmt->bind_param("s", $nombre_equipo);
-            $equipo_stmt->execute();
-            $equipo_result = $equipo_stmt->get_result();
-            $equipo_row = $equipo_result->fetch_assoc();
-            $serie_equipo = $equipo_row['Serie'];
-            $estado_equipo = $equipo_row['Estado'];
-            $equipo_stmt->close();
+        // Consulta para obtener los detalles de asignación desde la tabla detalles_asignacion
+        $detalles_stmt = $mysqli->prepare("SELECT Equipo, placa_equipo, Estado, Cantidad_entregada FROM detalles_entrega WHERE id_entrega = ?");
+        $detalles_stmt->bind_param("i", $id_entrega);
+        $detalles_stmt->execute();
+        $detalles_result = $detalles_stmt->get_result();
 
-            // Insertar datos del equipo en las celdas correspondientes
-            $sheet->setCellValue('C' . (13), $nombre_equipo); // Nombre del Equipo
-            $sheet->setCellValue('L' . (13), $serie_equipo); // Serie del Equipo
-            $sheet->setCellValue('B' . (13), $cantidad_prestada); // Cantidad Prestada
-            $sheet->setCellValue('N' . (13), $estado_equipo); // Estado del Equipo
 
-            $row++; // Incrementar la fila para el siguiente equipo
+
+        while ($detalle_row = $detalles_result->fetch_assoc()) {
+            $nombre_equipo = $detalle_row['Equipo'];
+            $placa_equipo = $detalle_row['placa_equipo'];
+            $estado_equipo = $detalle_row['Estado'] == 0 ? 'Nuevo' : $detalle_row['Estado']; // Reemplaza 0 por "Nuevo"
+            $cantidad_entregada = $detalle_row['Cantidad_entregada'];
+
+            $sheet->setCellValue('C' . (10 + $row), $nombre_equipo);
+            $sheet->setCellValue('L' . (10 + $row), $placa_equipo);
+            $sheet->setCellValue('N' . (10 + $row), $estado_equipo);
+            $sheet->setCellValue('B' . (10 + $row), $cantidad_entregada);
+            $row++;
         }
+
+
+        $detalles_stmt->close();
 
         // Guardar los cambios en una nueva plantilla de Excel con nombre único
         $newTemplatePath = './assets/actas/entregas/' . $cod_entrega . '.xlsx';
@@ -278,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
 function obtenerNombreUsuario($mysqli, $usuario_id)
 {
     $nombre = null;
-    if ($stmt = $mysqli->prepare("SELECT nombre FROM usuarios WHERE id = ?")) {
+    if ($stmt = $mysqli->prepare("SELECT nombre FROM usuarios_prestamo WHERE id = ?")) {
         $stmt->bind_param("i", $usuario_id);
         if ($stmt->execute()) {
             $stmt->bind_result($nombre);

@@ -180,10 +180,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
-                <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
-                <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
-                <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
+                <li><a href="historial_asignaciones.php">Asignaciones</a></li>
+                <li><a href="historial_prestamos.php">Prestamos</a></li>
+                <li><a href="historial_entregas.php">Entregas</a></li>
               </ul>
+            </li>
+            <li class="submenu">
+              <a href="historial.php"><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
+                  Historial</span>
+              </a>
             </li>
           </ul>
         </div>
