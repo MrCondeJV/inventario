@@ -30,7 +30,6 @@ include "./conexion.php";
 $usuario_id = $_POST['usuario_id'];
 $equipos = $_POST['equipos'];
 $fecha_asignacion = date('Y-m-d H:i:s');
-$recomendaciones = $_POST['recomendaciones'];
 $observaciones = $_POST['observaciones'];
 
 // Obtén el nombre del usuario
@@ -125,8 +124,8 @@ if (!move_uploaded_file($_FILES["archivo_pdf"]["tmp_name"], $targetFilePath)) {
 $codigo_asignacion = generateUniqueAssignmentCode($mysqli);
 
 // Insertar la asignación en la tabla asignaciones
-$asignacion_stmt = $mysqli->prepare("INSERT INTO asignaciones (id_asignacion, usuario_id, Nombre_usuario, Fecha_asignacion, Recomendaciones, Observaciones, docPdf) VALUES (?, ?, ?, ?, ?, ?, ?)");
-$asignacion_stmt->bind_param("sisssss", $codigo_asignacion, $usuario_id, $nombre_usuario, $fecha_asignacion, $recomendaciones, $observaciones, $fileName);
+$asignacion_stmt = $mysqli->prepare("INSERT INTO asignaciones (id_asignacion, usuario_id, Nombre_usuario, Fecha_asignacion, Observaciones, docPdf) VALUES (?, ?, ?, ?, ?, ?)");
+$asignacion_stmt->bind_param("sissss", $codigo_asignacion, $usuario_id, $nombre_usuario, $fecha_asignacion, $observaciones, $fileName);
 $asignacion_stmt->execute();
 $asignacion_id = $asignacion_stmt->insert_id;
 $asignacion_stmt->close();

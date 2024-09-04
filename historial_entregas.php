@@ -207,6 +207,7 @@ $rol = $_SESSION['ID_Rol']
                   <th>Codigo Devolucion</th>
                   <th>Devolutor</th>
                   <th>Fecha Devolucion</th>
+                  <th>Observaciones</th>
                   <th>Accion</th>
                 </tr>
               </thead>
@@ -220,6 +221,7 @@ $rol = $_SESSION['ID_Rol']
                     <td><?php echo $datos->Cod_entrega ?></td>
                     <td><?php echo $datos->Nombre_usuario ?></td>
                     <td><?php echo $datos->Fecha_entregado ?></td>
+                    <td><?php echo $datos->Observaciones ?></td>
                     <td>
                       <a class="me-3" href="#">
                         <img src="assets/img/icons/eye.svg" alt="img" />

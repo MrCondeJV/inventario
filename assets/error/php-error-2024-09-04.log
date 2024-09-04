@@ -1,0 +1,11 @@
+[04-Sep-2024 22:02:58 Europe/Berlin] PHP Warning:  Undefined array key "recomendaciones" in C:\xampp\htdocs\inventario\procesar_prestamo.php on line 35
+[04-Sep-2024 22:02:58 Europe/Berlin] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\inventario\procesar_prestamo.php:133
+Stack trace:
+#0 C:\xampp\htdocs\inventario\procesar_prestamo.php(133): mysqli_stmt->bind_param('sisssss', 'PRESTAMO-a0774d', '4', 'DE LA VEGA', '2024-09-04 22:0...', 'Ninguna', 'Certificatec4 (...')
+#1 {main}
+  thrown in C:\xampp\htdocs\inventario\procesar_prestamo.php on line 133
+[04-Sep-2024 22:03:39 Europe/Berlin] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in C:\xampp\htdocs\inventario\procesar_prestamo.php:133
+Stack trace:
+#0 C:\xampp\htdocs\inventario\procesar_prestamo.php(133): mysqli_stmt->bind_param('sisssss', 'PRESTAMO-57eabd', '4', 'DE LA VEGA', '2024-09-04 22:0...', 'sdfbhsbdfS', 'Certificatec4 (...')
+#1 {main}
+  thrown in C:\xampp\htdocs\inventario\procesar_prestamo.php on line 133

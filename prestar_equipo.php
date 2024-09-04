@@ -189,11 +189,10 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-sm-12">
-                                <div class="form-group">
-                                    <label for="buscarEquipo">Buscar por Nombre de Equipo</label>
-                                    <input type="text" class="form-control" id="buscarEquipo" placeholder="Ingrese el nombre del equipo">
-                                </div>
+
+                            <div class="form-group">
+                                <label for="buscarEquipo">Buscar por Nombre de Equipo</label>
+                                <input type="text" class="form-control" id="buscarEquipo" placeholder="Ingrese el nombre del equipo">
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group">
@@ -244,22 +243,10 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label>Recomendaciones tecnicas</label>
-                                    <div class="card">
-
-                                        <textarea class="form-control" name="recomendaciones" rows="3"></textarea>
-
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-12">
-                                <div class="form-group">
                                     <label>Observaciones</label>
                                     <div class="card">
 
-                                        <textarea class="form-control" name="observaciones" rows="3"></textarea>
+                                        <textarea class="form-control" name="observaciones" rows="3" required></textarea>
 
                                     </div>
                                 </div>
@@ -376,6 +363,15 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                 generateSerialInputs(cantidadInput, equipoId);
             }
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Inicializar Select2 para el select de usuarios
+            $('#usuario').select2({
+                placeholder: 'Seleccione un usuario',
+                allowClear: true
+            });
+        });
     </script>
 
 

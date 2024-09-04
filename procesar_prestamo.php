@@ -32,7 +32,7 @@ include "./conexion.php";
 $usuario_id = $_POST['usuario_id'];
 $equipos = $_POST['equipos'];
 $fecha_prestamo = date('Y-m-d H:i:s');
-$recomendaciones = $_POST['recomendaciones'];
+
 $observaciones = $_POST['observaciones'];
 
 // Obtén el nombre del usuario
@@ -129,8 +129,8 @@ if (!move_uploaded_file($_FILES["archivo_pdf"]["tmp_name"], $targetFilePath)) {
 $codigo_prestamo = generateUniqueLoanCode($mysqli);
 
 // Insertar el préstamo en la tabla prestamos
-$prestamo_stmt = $mysqli->prepare("INSERT INTO prestamos (Cod_prestamo, usuario_id, Nombre_usuario, Fecha_prestamo, Recomendaciones, Observaciones, docPdf) VALUES (?, ?, ?, ?, ?, ?, ?)");
-$prestamo_stmt->bind_param("sisssss", $codigo_prestamo, $usuario_id, $nombre_usuario, $fecha_prestamo, $recomendaciones, $observaciones, $fileName);
+$prestamo_stmt = $mysqli->prepare("INSERT INTO prestamos (Cod_prestamo, usuario_id, Nombre_usuario, Fecha_prestamo, Observaciones, docPdf) VALUES (?, ?, ?, ?, ?, ?)");
+$prestamo_stmt->bind_param("sissss", $codigo_prestamo, $usuario_id, $nombre_usuario, $fecha_prestamo, $observaciones, $fileName);
 $prestamo_stmt->execute();
 $prestamo_id = $prestamo_stmt->insert_id;
 $prestamo_stmt->close();

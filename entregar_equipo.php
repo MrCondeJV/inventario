@@ -303,6 +303,15 @@ if (isset($_POST['entregar_todo'])) {
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            // Inicializar Select2 para el select de usuarios
+            $('#usuario').select2({
+                placeholder: 'Seleccione un usuario',
+                allowClear: true
+            });
+        });
+    </script>
 
 </body>
 
