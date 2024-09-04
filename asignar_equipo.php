@@ -178,7 +178,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
 
             <div class="card shadow">
                 <div class="card-body">
-                    <form action="procesar_asignacion.php" method="post">
+                    <form action="procesar_asignacion.php" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
@@ -233,6 +233,15 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cargar archivo PDF</label>
+                                <input
+                                    type="file"
+                                    class="form-control"
+                                    name="archivo_pdf"
+                                    accept=".pdf"
+                                    required />
                             </div>
 
                             <div class="col-lg-12">

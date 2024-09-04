@@ -28,9 +28,6 @@ if (!isset($_SESSION['id'])) {
 }
 
 include "./conexion.php";
-require './vendor/autoload.php'; // Incluir la biblioteca PhpSpreadsheet
-
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 $usuario_id = $_POST['usuario_id'];
 $equipos = $_POST['equipos'];
@@ -101,11 +98,39 @@ function generateUniqueLoanCode($mysqli)
     }
 }
 
+// Validación y subida del archivo PDF
+$targetDir = "uploads/";
+$fileName = basename($_FILES["archivo_pdf"]["name"]);
+$targetFilePath = $targetDir . $fileName;
+$fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+
+
+
+// Verificar si el archivo es un PDF
+if ($fileType != "pdf") {
+    ob_end_clean();
+    echo "<script>
+    alert('Solo se permiten archivos PDF.');
+    document.location='prestar_equipo.php';
+    </script>";
+    exit;
+}
+
+// Subir el archivo al servidor
+if (!move_uploaded_file($_FILES["archivo_pdf"]["tmp_name"], $targetFilePath)) {
+    ob_end_clean();
+    echo "<script>
+    alert('Error al subir el archivo.');
+    document.location='prestar_equipo.php';
+    </script>";
+    exit;
+}
+
 $codigo_prestamo = generateUniqueLoanCode($mysqli);
 
 // Insertar el préstamo en la tabla prestamos
-$prestamo_stmt = $mysqli->prepare("INSERT INTO prestamos (Cod_prestamo, usuario_id, Nombre_usuario, Fecha_prestamo, Recomendaciones, Observaciones) VALUES (?, ?, ?, ?, ?, ?)");
-$prestamo_stmt->bind_param("sissss", $codigo_prestamo, $usuario_id, $nombre_usuario, $fecha_prestamo, $recomendaciones, $observaciones);
+$prestamo_stmt = $mysqli->prepare("INSERT INTO prestamos (Cod_prestamo, usuario_id, Nombre_usuario, Fecha_prestamo, Recomendaciones, Observaciones, docPdf) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$prestamo_stmt->bind_param("sisssss", $codigo_prestamo, $usuario_id, $nombre_usuario, $fecha_prestamo, $recomendaciones, $observaciones, $fileName);
 $prestamo_stmt->execute();
 $prestamo_id = $prestamo_stmt->insert_id;
 $prestamo_stmt->close();
@@ -167,52 +192,5 @@ foreach ($equipos as $equipo_id => $equipo_data) {
 
 
 
-// Ruta de la plantilla de Excel existente
-$templatePath = './assets/actas/PRESTAMO.xlsx';
-
-// Cargar la plantilla de Excel
-$spreadsheet = IOFactory::load($templatePath);
-$sheet = $spreadsheet->getActiveSheet();
-
-$sheet->setCellValue('B6', $codigo_prestamo);
-$sheet->setCellValue('B8', $nombre_usuario);
-$sheet->setCellValue('B7', $fecha_prestamo);
-$sheet->setCellValue('B26', $recomendaciones);
-$sheet->setCellValue('B40', $observaciones);
-$sheet->setCellValue('J8', $cargo_usuario);
-$sheet->setCellValue('B9', $unidad_usuario);
-
-$row = 3;
-
-// Consulta para obtener los detalles de asignación desde la tabla detalles_asignacion
-$detalles_stmt = $mysqli->prepare("SELECT Equipo, placa_equipo, Estado, Cantidad_prestada FROM detalles_prestamo WHERE id_prestamo = ?");
-$detalles_stmt->bind_param("i", $prestamo_id);
-$detalles_stmt->execute();
-$detalles_result = $detalles_stmt->get_result();
-
-
-while ($detalle_row = $detalles_result->fetch_assoc()) {
-    $nombre_equipo = $detalle_row['Equipo'];
-    $placa_equipo = $detalle_row['placa_equipo'];
-    $estado_equipo = $detalle_row['Estado'] == 0 ? 'Nuevo' : $detalle_row['Estado']; // Reemplaza 0 por "Nuevo"
-    $cantidad_prestada = $detalle_row['Cantidad_prestada'];
-
-    $sheet->setCellValue('C' . (10 + $row), $nombre_equipo); 
-    $sheet->setCellValue('L' . (10 + $row), $placa_equipo); 
-    $sheet->setCellValue('N' . (10 + $row), $estado_equipo); 
-    $sheet->setCellValue('B' . (10 + $row), $cantidad_prestada); 
-    $row++; 
-}
-
-
-$detalles_stmt->close();
-
-$newTemplatePath = './assets/actas/prestamos/' . $codigo_prestamo . '.xlsx';
-$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-$writer->save($newTemplatePath);
-
-chmod($newTemplatePath, 0644);
-
-// Redirigir o hacer cualquier otra operación después de guardar los datos en la plantilla
 header("Location: index.php?prestamo=exito");
 exit();

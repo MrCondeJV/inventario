@@ -25,9 +25,7 @@ if (!isset($_SESSION['id'])) {
 }
 
 include "./conexion.php";
-require './vendor/autoload.php'; // Incluir la biblioteca PhpSpreadsheet
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 $usuario_id = $_POST['usuario_id'];
 $equipos = $_POST['equipos'];
@@ -97,11 +95,38 @@ function generateUniqueAssignmentCode($mysqli) {
     }
 }
 
+// Validación y subida del archivo PDF
+$targetDir = "uploads/";
+$fileName = basename($_FILES["archivo_pdf"]["name"]);
+$targetFilePath = $targetDir . $fileName;
+$fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+
+
+// Verificar si el archivo es un PDF
+if ($fileType != "pdf") {
+    ob_end_clean();
+    echo "<script>
+    alert('Solo se permiten archivos PDF.');
+    document.location='asignar_equipo.php';
+    </script>";
+    exit;
+}
+
+// Subir el archivo al servidor
+if (!move_uploaded_file($_FILES["archivo_pdf"]["tmp_name"], $targetFilePath)) {
+    ob_end_clean();
+    echo "<script>
+    alert('Error al subir el archivo.');
+    document.location='asignar_equipo.php';
+    </script>";
+    exit;
+}
+
 $codigo_asignacion = generateUniqueAssignmentCode($mysqli);
 
 // Insertar la asignación en la tabla asignaciones
-$asignacion_stmt = $mysqli->prepare("INSERT INTO asignaciones (id_asignacion, usuario_id, Nombre_usuario, Fecha_asignacion, Recomendaciones, Observaciones) VALUES (?, ?, ?, ?, ?, ?)");
-$asignacion_stmt->bind_param("sissss", $codigo_asignacion, $usuario_id, $nombre_usuario, $fecha_asignacion, $recomendaciones, $observaciones);
+$asignacion_stmt = $mysqli->prepare("INSERT INTO asignaciones (id_asignacion, usuario_id, Nombre_usuario, Fecha_asignacion, Recomendaciones, Observaciones, docPdf) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$asignacion_stmt->bind_param("sisssss", $codigo_asignacion, $usuario_id, $nombre_usuario, $fecha_asignacion, $recomendaciones, $observaciones, $fileName);
 $asignacion_stmt->execute();
 $asignacion_id = $asignacion_stmt->insert_id;
 $asignacion_stmt->close();
@@ -162,61 +187,7 @@ foreach ($equipos as $equipo_id => $equipo_data) {
     }
 }
 header("Location: index.php?asignacion=exito");
-// Ruta de la plantilla de Excel existente
-$templatePath = './assets/actas/ASIGNACION.xlsx';
 
-// Cargar la plantilla de Excel
-$spreadsheet = IOFactory::load($templatePath);
-$sheet = $spreadsheet->getActiveSheet();
-
-$sheet->setCellValue('B6', $codigo_asignacion);
-$sheet->setCellValue('B8', $nombre_usuario); 
-$sheet->setCellValue('B7', $fecha_asignacion); 
-$sheet->setCellValue('B26', $recomendaciones); 
-$sheet->setCellValue('B40', $observaciones); 
-$sheet->setCellValue('J8', $cargo_usuario); 
-$sheet->setCellValue('B9', $unidad_usuario); 
-
-$row = 3; 
-
-// Consulta para obtener los detalles de asignación desde la tabla detalles_asignacion
-$detalles_stmt = $mysqli->prepare("SELECT Equipo, Placa_Equipo, Estado, Cantidad_asignada FROM detalles_asignacion WHERE id_asignacion = ?");
-$detalles_stmt->bind_param("i", $asignacion_id);
-$detalles_stmt->execute();
-$detalles_result = $detalles_stmt->get_result();
-
-
-
-while ($detalle_row = $detalles_result->fetch_assoc()) {
-    $nombre_equipo = $detalle_row['Equipo'];
-    $placa_equipo = $detalle_row['Placa_Equipo'];
-    $estado_equipo = $detalle_row['Estado'] == 0 ? 'Nuevo' : $detalle_row['Estado']; // Reemplaza 0 por "Nuevo"
-    $cantidad_asignada = $detalle_row['Cantidad_asignada'];
-
-    $sheet->setCellValue('C' . (10 + $row), $nombre_equipo); 
-    $sheet->setCellValue('L' . (10 + $row), $placa_equipo); 
-    $sheet->setCellValue('N' . (10 + $row), $estado_equipo); 
-    $sheet->setCellValue('B' . (10 + $row), $cantidad_asignada); 
-    $row++; 
-}
-
-
-$detalles_stmt->close();
-
-
-// Guardar el archivo Excel generado
-
-$savePath = './assets/actas/asignaciones/' . $codigo_asignacion .'.xlsx';
-$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-$writer->save($savePath);
-
-// Descargar el archivo Excel generado
-header("Content-Disposition: attachment; filename=\"" . basename($savePath) . "\"");
-header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-header("Content-Length: " . filesize($savePath));
-header("Pragma: no-cache");
-header("Expires: 0");
-readfile($savePath);
 
 exit;
 

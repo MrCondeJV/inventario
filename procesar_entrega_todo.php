@@ -24,8 +24,6 @@ if (!isset($_SESSION['id'])) {
 }
 
 include "./conexion.php";
-require './vendor/autoload.php'; // Incluir la biblioteca PhpSpreadsheet
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 $usuario_id = $_POST['usuario_id'] ?? '';
 $equipos = $_POST['equipos'] ?? [];
@@ -36,7 +34,7 @@ if (empty($equipos)) {
     exit();
 }
 
-$recomendaciones = $_POST['recomendaciones'] ?? '';
+
 $observaciones = $_POST['observaciones'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
@@ -116,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
 
     try {
         $fecha_entregado = date('Y-m-d H:i:s');
-        $stmt_entrega = $mysqli->prepare("INSERT INTO entregas (Cod_entrega, usuario_id, Nombre_usuario, Fecha_entregado, recomendaciones, observaciones) VALUES (?, ?, ?, ?, ?, ? )");
-        $stmt_entrega->bind_param("sissss", $cod_entrega, $usuario_id, $nombre_usuario, $fecha_entregado, $recomendaciones, $observaciones);
+        $stmt_entrega = $mysqli->prepare("INSERT INTO entregas (Cod_entrega, usuario_id, Nombre_usuario, Fecha_entregado, observaciones) VALUES (?, ?, ?, ?, ? )");
+        $stmt_entrega->bind_param("sisss", $cod_entrega, $usuario_id, $nombre_usuario, $fecha_entregado, $observaciones);
         if (!$stmt_entrega->execute()) {
             throw new Exception("Error al insertar en la tabla `entregas`: " . $stmt_entrega->error);
         }
@@ -138,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
             $stmt_placa->fetch();
             $stmt_placa->close();
 
-            error_log("Valor recuperado de placa_equipo: " . $placa_equipo);
+            
 
 
             // Actualizar la cantidad en la tabla `equipos`
@@ -191,72 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
 
         $mysqli->commit();
 
-        // Ruta de la plantilla de Excel existente
-        $templatePath = './assets/actas/ENTREGA.xlsx';
 
-        // Comprobar si la plantilla existe
-        if (!file_exists($templatePath)) {
-            error_log("La plantilla de Excel no se encontró en la ruta: " . $templatePath);
-            header("Location: entregar_equipo.php?usuario_id=" . $usuario_id . "&error=1");
-            exit();
-        }
-
-        // Cargar la plantilla de Excel
-        try {
-            $spreadsheet = IOFactory::load($templatePath);
-        } catch (Exception $e) {
-            error_log("Error al cargar la plantilla de Excel: " . $e->getMessage());
-            header("Location: entregar_equipo.php?usuario_id=" . $usuario_id . "&error=1");
-            exit();
-        }
-
-        // Seleccionar la primera hoja de la plantilla
-        $sheet = $spreadsheet->getActiveSheet();
-
-        // Insertar datos en las celdas correspondientes
-        $sheet->setCellValue('B6', $cod_entrega); // Código de Entrega
-        $sheet->setCellValue('B8', $nombre_usuario); // Nombre de Usuario
-        $sheet->setCellValue('B7', $fecha_entregado); // Fecha de Entrega
-        $sheet->setCellValue('B26', $recomendaciones); // Recomendaciones Técnicas
-        $sheet->setCellValue('B40', $observaciones); // Observaciones
-        $sheet->setCellValue('J8', $cargo_usuario); // Cargo
-        $sheet->setCellValue('B9', $unidad_usuario); // Unidad
-
-        $row = 3;
-
-        // Consulta para obtener los detalles de asignación desde la tabla detalles_asignacion
-        $detalles_stmt = $mysqli->prepare("SELECT Equipo, placa_equipo, Estado, Cantidad_entregada FROM detalles_entrega WHERE id_entrega = ?");
-        $detalles_stmt->bind_param("i", $id_entrega);
-        $detalles_stmt->execute();
-        $detalles_result = $detalles_stmt->get_result();
-
-
-
-        while ($detalle_row = $detalles_result->fetch_assoc()) {
-            $nombre_equipo = $detalle_row['Equipo'];
-            $placa_equipo = $detalle_row['placa_equipo'];
-            $estado_equipo = $detalle_row['Estado'] == 0 ? 'Nuevo' : $detalle_row['Estado']; // Reemplaza 0 por "Nuevo"
-            $cantidad_entregada = $detalle_row['Cantidad_entregada'];
-
-            $sheet->setCellValue('C' . (10 + $row), $nombre_equipo);
-            $sheet->setCellValue('L' . (10 + $row), $placa_equipo);
-            $sheet->setCellValue('N' . (10 + $row), $estado_equipo);
-            $sheet->setCellValue('B' . (10 + $row), $cantidad_entregada);
-            $row++;
-        }
-
-
-        $detalles_stmt->close();
-
-        // Guardar los cambios en una nueva plantilla de Excel con nombre único
-        $newTemplatePath = './assets/actas/entregas/' . $cod_entrega . '.xlsx';
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save($newTemplatePath);
-
-        // Cambiar permisos en el archivo recién creado
-        chmod($newTemplatePath, 0644); // Establecer permisos para lectura/escritura para el propietario y solo lectura para los demás
-
-        // Redirigir o hacer cualquier otra operación después de guardar los datos en la plantilla
         header("Location: index.php?entrega=exito");
         exit();
     } catch (Exception $e) {

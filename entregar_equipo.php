@@ -247,14 +247,6 @@ if (isset($_POST['entregar_todo'])) {
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Recomendaciones técnicas</label>
-                                                    <div class="card">
-                                                        <textarea class="form-control" name="recomendaciones" rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
 
                                             <div class="col-lg-12">
                                                 <div class="form-group">

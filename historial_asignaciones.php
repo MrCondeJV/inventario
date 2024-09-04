@@ -222,7 +222,7 @@ $rol = $_SESSION['ID_Rol']
                     <td><?php echo $datos->Nombre_usuario ?></td>
                     <td><?php echo $datos->Fecha_asignacion ?></td>
                     <td>
-                      <a class="me-3" href="#">
+                      <a href="uploads/<?php echo $datos->docPdf ?>" download>
                         <img src="assets/img/icons/eye.svg" alt="img" />
                       </a>
                     </td>
