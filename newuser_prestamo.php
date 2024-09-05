@@ -172,15 +172,15 @@ $rol = $_SESSION['ID_Rol']
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Documento</label>
-                  <input type="text" name="Documento" />
+                  <input type="text" name="Documento" required/>
                 </div>
                 <div class="form-group">
                   <label>Nombre</label>
-                  <input type="text" name="Nombre" />
+                  <input type="text" name="Nombre" required/>
                 </div>
                 <div class="form-group">
                   <label>Cargo</label>
-                  <input type="text" name="Cargo" />
+                  <input type="text" name="Cargo" required/>
                 </div>
                 <div class="form-group">
 
@@ -189,7 +189,7 @@ $rol = $_SESSION['ID_Rol']
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Unidad</label>
-                  <input type="text" name="Unidad" />
+                  <input type="text" name="Unidad" required/>
                 </div>
 
               </div>

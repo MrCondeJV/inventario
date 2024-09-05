@@ -252,7 +252,7 @@ if (isset($_POST['entregar_todo'])) {
                                                 <div class="form-group">
                                                     <label>Observaciones</label>
                                                     <div class="card">
-                                                        <textarea class="form-control" name="observaciones" rows="3"></textarea>
+                                                        <textarea class="form-control" name="observaciones" rows="3" required></textarea>
                                                     </div>
                                                 </div>
                                             </div>

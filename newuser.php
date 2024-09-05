@@ -172,15 +172,15 @@ $rol = $_SESSION['ID_Rol']
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Documento</label>
-                  <input type="text" name="Documento" />
+                  <input type="text" name="Documento" required/>
                 </div>
                 <div class="form-group">
                   <label>Nombre</label>
-                  <input type="text" name="Nombre" />
+                  <input type="text" name="Nombre" required/>
                 </div>
                 <div class="form-group">
                   <label>Cargo</label>
-                  <input type="text" name="Cargo" />
+                  <input type="text" name="Cargo" required/>
                 </div>
                 <div class="form-group">
 
@@ -189,23 +189,23 @@ $rol = $_SESSION['ID_Rol']
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Unidad</label>
-                  <input type="text" name="Unidad" />
+                  <input type="text" name="Unidad" required/>
                 </div>
                 <div class="form-group">
                   <label>Usuario</label>
-                  <input type="text" name="Usuario" />
+                  <input type="text" name="Usuario" required/>
                 </div>
 
                 <div class="form-group">
                   <label>Contraseña</label>
                   <div class="pass-group">
-                    <input type="password" class="pass-inputs" name="contrasena" />
+                    <input type="password" class="pass-inputs" name="contrasena" required/>
                     <span class="fas toggle-passworda fa-eye-slash"></span>
                   </div>
                 </div>
                 <div class="form-group">
                   <label>Role</label>
-                  <select class="select" name="Rol">
+                  <select class="select" name="Rol" required>
                     <option>Select</option>
                     <option>1. Administrador</option>
                     <option>2. Observador</option>

@@ -175,19 +175,19 @@ $rol = $_SESSION['ID_Rol']
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Cod. Serie</label>
-                  <input type="text" name="Serie" />
+                  <input type="text" name="Serie" required>
                 </div>
               </div>
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Nombre Equipo</label>
-                  <input type="text" name="Nombre" />
+                  <input type="text" name="Nombre" required>
                 </div>
               </div>
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Categoria</label>
-                  <select class="select" name="Categoria">
+                  <select class="select" name="Categoria" required>
                     <option>Escoger Categoria</option>
                     <option>Tecnologia</option>
                   </select>
@@ -196,7 +196,7 @@ $rol = $_SESSION['ID_Rol']
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Estado</label>
-                  <select class="select" name="Estado">
+                  <select class="select" name="Estado" required>
                     <option>Escoger Estado</option>
                     <option>Nuevo</option>
                     <option>Bueno</option>
@@ -207,7 +207,7 @@ $rol = $_SESSION['ID_Rol']
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
                   <label>Stock</label>
-                  <input type="text" name="Cantidad" />
+                  <input type="text" name="Cantidad" required>
                 </div>
               </div>
 
@@ -215,7 +215,7 @@ $rol = $_SESSION['ID_Rol']
                 <div class="form-group">
                   <label>Imagen de Equipo</label>
                   <div class="image-upload">
-                    <input type="file" id="inputFile" name="Imagen" class="form-control">
+                    <input type="file" id="inputFile" name="Imagen" class="form-control" required>
                     <div class="image-uploads">
                       <img src="assets/img/icons/upload.svg" alt="img" />
                       <h4>Arrastra y suelta un archivo para cargar</h4>
