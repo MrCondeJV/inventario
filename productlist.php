@@ -37,10 +37,10 @@ $rol = $_SESSION['ID_Rol']
     <div class="header">
       <div class="header-left active">
         <a href="index.php" class="logo">
-          <img src="assets/img/logos/esfim_logo.png" alt="" />
+          <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
         </a>
         <a href="index.php" class="logo-small">
-          <img src="assets/img/logos/esfim_logo.png" alt="" />
+          <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
         </a>
         <a id="toggle_btn" href="javascript:void(0);"> </a>
       </div>
@@ -181,16 +181,9 @@ $rol = $_SESSION['ID_Rol']
                 <li>
                   <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img" /></a>
                 </li>
-                <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="excel"><img src="assets/img/icons/excel.svg" alt="img" /></a>
-                </li>
-                <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="print"><img src="assets/img/icons/printer.svg" alt="img" /></a>
-                </li>
               </ul>
             </div>
           </div>
-
           <div class="card mb-0" id="filter_inputs">
             <div class="card-body pb-0">
               <div class="row">
@@ -248,7 +241,6 @@ $rol = $_SESSION['ID_Rol']
               </div>
             </div>
           </div>
-
           <div class="table-responsive">
             <table class="table datanew">
               <thead>
@@ -296,7 +288,6 @@ $rol = $_SESSION['ID_Rol']
     </div>
   </div>
   </div>
-
   <script src="assets/js/jquery-3.6.0.min.js"></script>
   <script src="assets/js/feather.min.js"></script>
   <script src="assets/js/jquery.slimscroll.min.js"></script>

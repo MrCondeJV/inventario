@@ -108,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
@@ -120,6 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+
 <body>
     <div id="global-loader">
         <div class="whirly-loader"></div>
@@ -128,10 +130,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="header">
             <div class="header-left active">
                 <a href="index.php" class="logo">
-                    <img src="assets/img/logos/esfim_logo.png" alt="" />
+                    <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
                 </a>
                 <a href="index.php" class="logo-small">
-                    <img src="assets/img/logos/esfim_logo.png" alt="" />
+                    <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
                 </a>
                 <a id="toggle_btn" href="javascript:void(0);"> </a>
             </div>
@@ -188,6 +190,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <li><a href="addproducto.php">Agregar Equipo</a></li>
                             </ul>
                         </li>
+
                         <li class="submenu">
                             <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img" /><span>
                                     Usuarios</span>
@@ -197,13 +200,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <li><a href="userlists.php">Lista Usuarios</a></li>
                             </ul>
                         </li>
+
                         <li class="submenu">
-                            <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
-                                    Configuracion</span>
+                            <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img" /><span>
+                                    Usuarios Prestamos</span>
                                 <span class="menu-arrow"></span></a>
                             <ul>
-                                <li><a href="generalsettings.php">General Settings</a></li>
+                                <li><a href="newuser_prestamo.php">Nuevo Usuario </a></li>
+                                <li><a href="userlists_prestamo.php">Lista Usuarios</a></li>
                             </ul>
+                        </li>
+
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
+                                    Acciones</span>
+                                <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="asignar_equipo.php">Asignar Equipo</a></li>
+                                <li><a href="prestar_equipo.php">Prestar Equipo</a></li>
+                                <li><a href="entregar_equipo.php">Entregar Equipo</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
+                                    Historial</span>
+                                <span class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="historial_asignaciones.php">Asignaciones</a></li>
+                                <li><a href="historial_prestamos.php">Prestamos</a></li>
+                                <li><a href="historial_entregas.php">Entregas</a></li>
+                            </ul>
+
                         </li>
                     </ul>
                 </div>
@@ -221,7 +248,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="card">
                 <div class="card-body">
-                    <form  method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data">
 
                         <div class="row">
                             <div class="col-lg-3 col-sm-6 col-12">
@@ -336,4 +363,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script src="assets/js/script.js"></script>
 </body>
+
 </html>

@@ -44,10 +44,10 @@ $rol = $_SESSION['ID_Rol'];
     <div class="header">
       <div class="header-left active">
         <a href="index.php" class="logo">
-          <img src="assets/img/logos/esfim_logo.png" alt="" />
+          <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
         </a>
         <a href="index.php" class="logo-small">
-          <img src="assets/img/logos/esfim_logo.png" alt="" />
+          <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
         </a>
         <a id="toggle_btn" href="javascript:void(0);"> </a>
       </div>
@@ -172,7 +172,7 @@ $rol = $_SESSION['ID_Rol'];
           <div class="table-top">
             <div class="search-set">
               <div class="search-path">
-                
+
               </div>
               <div class="search-input">
                 <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img" /></a>
@@ -183,7 +183,7 @@ $rol = $_SESSION['ID_Rol'];
                 <li>
                   <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img" /></a>
                 </li>
-                
+
               </ul>
             </div>
           </div>
@@ -256,7 +256,7 @@ $rol = $_SESSION['ID_Rol'];
       </div>
     </div>
   </div>
-  
+
 
 
 

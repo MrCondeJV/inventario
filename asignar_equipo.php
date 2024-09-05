@@ -59,10 +59,10 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
         <div class="header">
             <div class="header-left active">
                 <a href="index.php" class="logo">
-                    <img src="assets/img/logos/esfim_logo.png" alt="logo" />
+                    <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
                 </a>
                 <a href="index.php" class="logo-small">
-                    <img src="assets/img/logos/esfim_logo.png" alt="logo" />
+                    <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
                 </a>
                 <a id="toggle_btn" href="javascript:void(0);"> </a>
             </div>

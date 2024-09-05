@@ -44,10 +44,10 @@ $rol = $_SESSION['ID_Rol']
     <div class="header">
       <div class="header-left active">
         <a href="index.php" class="logo">
-          <img src="assets/img/logos/esfim_logo.png" alt="" />
+          <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
         </a>
         <a href="index.php" class="logo-small">
-          <img src="assets/img/logos/esfim_logo.png" alt="" />
+          <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
         </a>
         <a id="toggle_btn" href="javascript:void(0);"> </a>
       </div>
