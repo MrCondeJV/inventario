@@ -54,7 +54,7 @@ if (isset($_POST['entregar_todo'])) {
             header("Location: entregar_equipo.php?usuario_id=" . $_POST['usuario_id'] . "&error=true");
             exit();
         }
-        $marcar_entrega_stmt->close();
+        
     }
 }
 
