@@ -1,0 +1,5 @@
+[09-Sep-2024 16:04:07 America/Bogota] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'Cantidad_asignada' in 'field list' in C:\xampp\htdocs\inventario\procesar_asignacion.php:188
+Stack trace:
+#0 C:\xampp\htdocs\inventario\procesar_asignacion.php(188): mysqli->prepare('INSERT INTO his...')
+#1 {main}
+  thrown in C:\xampp\htdocs\inventario\procesar_asignacion.php on line 188

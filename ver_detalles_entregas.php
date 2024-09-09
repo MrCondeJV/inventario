@@ -9,10 +9,10 @@ if (!isset($_SESSION['id'])) {
 
 // Verificar si el parámetro 'id' está presente en la URL
 if (isset($_GET['id'])) {
-    $id_prestamo = $_GET['id'];
+    $id_entrega = $_GET['id'];
 
     // Consulta para obtener los detalles del préstamo por su ID
-    $sql = $mysqli->query("SELECT * FROM historial_entregas WHERE id_prestamo = $id_prestamo");
+    $sql = $mysqli->query("SELECT * FROM historial_entregas WHERE id_entrega = $id_entrega");
 
     if ($sql->num_rows > 0) {
         $detalle = $sql->fetch_object();
@@ -168,17 +168,15 @@ if (isset($_GET['id'])) {
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div>s
         </div>
     </div>
-
-
 
     <div class="page-wrapper">
         <div class="content">
             <div class="page-header">
                 <div class="page-title">
-                    <h4>Detalles del Préstamo</h4>
+                    <h4>Detalles de la entrega</h4>
                     <h6>Información detallada de los equipos prestados por <?php echo htmlspecialchars($detalle->Nombre_usuario); ?></h6>
                 </div>
             </div>
@@ -191,7 +189,7 @@ if (isset($_GET['id'])) {
                     </tr>
                     <tr>
                         <th>Código del Préstamo:</th>
-                        <td><?php echo $detalle->id_prestamo; ?></td>
+                        <td><?php echo $detalle->id_entrega; ?></td>
                     </tr>
                     <tr>
                         <th>Nombre del Usuario:</th>
