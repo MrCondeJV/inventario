@@ -241,7 +241,7 @@ $rol = $_SESSION['ID_Rol'];
                       <a class="me-3" href="newuseredit.php?id=<?php echo $datos->id ?>">
                         <img src="assets/img/icons/edit.svg" alt="img" />
                       </a>
-                      <a class="me-3 " href="eliminar_usuario.php?id=<?php echo $datos->id; ?>">
+                      <a class="me-3 "href="javascript:void(0);" onclick="confirmDeletion(<?php echo $datos->id; ?>)">
                         <img src="assets/img/icons/delete.svg" alt="img" />
                       </a>
                     </td>
@@ -285,6 +285,27 @@ $rol = $_SESSION['ID_Rol'];
   <script src="assets/plugins/sweetalert/sweetalerts.min.js"></script>
 
   <script src="assets/js/script.js"></script>
+
+
+  <script>
+    function confirmDeletion(id) {
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¡Este cambio no se puede revertir!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirigir a la página de eliminación si el usuario confirma
+          window.location.href = `eliminar_usuario.php?id=${id}`;
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>

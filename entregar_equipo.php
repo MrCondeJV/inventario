@@ -207,8 +207,9 @@ if (isset($_POST['entregar_todo'])) {
                                 <div class="form-group">
                                     <label for="usuario">Seleccionar Usuario</label>
                                     <select class="select form-control" name="usuario_id" id="usuario" onchange="this.form.submit()">
-                                        <option value="">Seleccione un usuario</option>
+                                        
                                         <?php foreach ($usuarios as $usuario) : ?>
+                                            <option value="">Seleccione un usuario</option>
                                             <option value="<?php echo $usuario['id']; ?>" <?php if ($usuario['id'] == $usuario_id) echo 'selected'; ?>><?php echo htmlspecialchars($usuario['nombre']); ?></option>
                                         <?php endforeach; ?>
                                     </select>

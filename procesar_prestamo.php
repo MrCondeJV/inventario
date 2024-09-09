@@ -171,7 +171,11 @@ foreach ($equipos as $equipo_id => $equipo_data) {
         // Insertar cada equipo con su placa y cantidad individualmente
         foreach ($seriales as $placa_equipo) {
             // Insertar detalle de préstamo en la tabla detalle_prestamo
-            $detalle_stmt = $mysqli->prepare("INSERT INTO detalles_prestamo (id_prestamo, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_prestada, placa_equipo, Estado) VALUES (?, ?, ?, ?, ?, 1, ?, ?)");
+            $detalle_stmt = $mysqli->prepare("
+        INSERT INTO detalles_prestamo 
+        (id_prestamo, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_prestada, placa_equipo, Estado) 
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+    ");
             if (!$detalle_stmt) {
                 die('Error en la preparación de la consulta: ' . $mysqli->error);
             }
@@ -179,13 +183,40 @@ foreach ($equipos as $equipo_id => $equipo_data) {
             // Cantidad prestada se fija en 1 para cada registro individual
             $detalle_stmt->bind_param("iissssi", $prestamo_id, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $placa_equipo, $estado_equipo);
 
+            // Verificar si la ejecución falla
             if (!$detalle_stmt->execute()) {
                 error_log('Error al insertar detalle de préstamo: ' . $detalle_stmt->error);
                 echo 'Error al insertar detalle de préstamo: ' . $detalle_stmt->error;
             } else {
                 echo 'Registro insertado con éxito para el número de serie: ' . $serie_equipo . '<br>';
             }
+
+            // Cerrar la primera sentencia
             $detalle_stmt->close();
+
+            // Segunda inserción en la tabla `historial_prestamos`
+            $historial_stmt = $mysqli->prepare("
+        INSERT INTO historial_prestamos 
+        (id_prestamo, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_prestada, placa_equipo, Estado) 
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+    ");
+            if (!$historial_stmt) {
+                die('Error en la preparación de la consulta de historial: ' . $mysqli->error);
+            }
+
+            // La misma lógica para la segunda inserción
+            $historial_stmt->bind_param("iissssi", $prestamo_id, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $placa_equipo, $estado_equipo);
+
+            // Verificar si la ejecución falla
+            if (!$historial_stmt->execute()) {
+                error_log('Error al insertar en historial de préstamos: ' . $historial_stmt->error);
+                echo 'Error al insertar en historial de préstamos: ' . $historial_stmt->error;
+            } else {
+                echo 'Registro insertado con éxito en el historial para el número de serie: ' . $serie_equipo . '<br>';
+            }
+
+            // Cerrar la segunda sentencia
+            $historial_stmt->close();
         }
     }
 }

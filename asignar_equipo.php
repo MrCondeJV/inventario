@@ -183,7 +183,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="usuario">Seleccionar Usuario</label>
-                                    <select class="select form-control" name="usuario_id" id="usuario">
+                                    <select class="select form-control" name="usuario_id" id="usuario" required>
                                         <?php foreach ($usuarios as $usuario) : ?>
                                             <option value="<?php echo $usuario['id']; ?>"><?php echo htmlspecialchars($usuario['nombre']); ?></option>
                                         <?php endforeach; ?>
@@ -200,7 +200,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                                 <div class="form-group">
                                     <label>Seleccionar Equipos</label>
                                     <div class="card">
-                                        <div class="card-body">
+                                        <div class="card-body"  style="max-height: 300px; overflow-y: auto;">
                                             <table class="table">
                                                 <thead>
                                                     <tr>

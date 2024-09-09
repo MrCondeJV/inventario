@@ -8,6 +8,23 @@ if (!isset($_SESSION['id'])) {
 
 $nombre = $_SESSION['nombre'];
 $rol = $_SESSION['ID_Rol'];
+
+include "./conexion.php";
+
+// Consultar cantidad de préstamos
+$sql_prestamos = $mysqli->query("SELECT COUNT(*) AS total_registros FROM prestamos");
+$datos_prestamos = $sql_prestamos->fetch_object()->total_registros;
+
+// Consultar cantidad de entregas
+$sql_entregas = $mysqli->query("SELECT COUNT(*) AS total_registros FROM entregas");
+$datos_entregas = $sql_entregas->fetch_object()->total_registros;
+
+// Consultar cantidad de asignaciones
+$sql_asignaciones = $mysqli->query("SELECT COUNT(*) AS total_registros FROM asignaciones");
+$datos_asignaciones = $sql_asignaciones->fetch_object()->total_registros;
+
+// Cerrar la conexión
+$mysqli->close();
 ?>
 
 <!DOCTYPE html>
@@ -88,7 +105,7 @@ $rol = $_SESSION['ID_Rol'];
               </a>
             </li>
             <li class="submenu">
-              <a href="javascript:void(0);"><img src="assets/img/icons/product.svg" alt="img" /><span>
+              <a href="javascript:void(0);"><img src="assets/img/icons/product.svg" alt="product-icon" /><span>
                   Equipos</span>
                 <span class="menu-arrow"></span></a>
               <ul>
@@ -96,9 +113,8 @@ $rol = $_SESSION['ID_Rol'];
                 <li><a href="addproducto.php">Agregar Equipo</a></li>
               </ul>
             </li>
-
             <li class="submenu">
-              <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img" /><span>
+              <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="users-icon" /><span>
                   Usuarios</span>
                 <span class="menu-arrow"></span></a>
               <ul>
@@ -118,7 +134,7 @@ $rol = $_SESSION['ID_Rol'];
             </li>
 
             <li class="submenu">
-              <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="img" /><span>
+              <a href="javascript:void(0);"><img src="assets/img/icons/settings.svg" alt="settings-icon" /><span>
                   Acciones</span>
                 <span class="menu-arrow"></span></a>
               <ul>
@@ -128,7 +144,7 @@ $rol = $_SESSION['ID_Rol'];
               </ul>
             </li>
             <li class="submenu">
-              <a href="javascript:void(0);"><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
+              <a href="historial.php"><img src="assets/img/icons/dashboard.svg" alt="img" /><span>
                   Historial</span>
                 <span class="menu-arrow"></span></a>
               <ul>
@@ -136,7 +152,7 @@ $rol = $_SESSION['ID_Rol'];
                 <li><a href="historial_prestamos.php">Prestamos</a></li>
                 <li><a href="historial_entregas.php">Entregas</a></li>
               </ul>
-
+              </a>
             </li>
           </ul>
         </div>
@@ -161,28 +177,18 @@ $rol = $_SESSION['ID_Rol'];
 
         <div class="container-fluid">
           <div class="row">
-
             <!-- PRESTAMOS TOTALES -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row align-items-center">
                     <div class="col mr-2">
-
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Prestamos Totales</div>
-                      
-                        <?php
-                      include "./conexion.php";
-                      $sql = $mysqli->query("SELECT COUNT(*) AS total_registros FROM prestamos");
-                      while ($datos = $sql->fetch_object()) { ?>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                          <?php echo $datos->total_registros ?>
-                        </div>
-                        </td>
-                        </tr>
-                      <?php }
-                      ?>
+                        Prestamos Totales
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <?php echo $datos_prestamos; ?>
+                      </div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-handshake fa-2x text-gray-300"></i>
@@ -192,7 +198,6 @@ $rol = $_SESSION['ID_Rol'];
               </div>
             </div>
 
-
             <!-- ENTREGAS TOTALES -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
@@ -200,20 +205,11 @@ $rol = $_SESSION['ID_Rol'];
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                        Entregas Totales</div>
-                        
-                      <?php
-                      include "./conexion.php";
-                      $sql = $mysqli->query("SELECT COUNT(*) AS total_registros FROM entregas");
-                      while ($datos = $sql->fetch_object()) { ?>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                          <?php echo $datos->total_registros ?>
-                        </div>
-                        </td>
-                        </tr>
-                      <?php }
-                      ?>
-                      
+                        Entregas Totales
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <?php echo $datos_entregas; ?>
+                      </div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-box-open fa-2x text-gray-300"></i>
@@ -223,28 +219,18 @@ $rol = $_SESSION['ID_Rol'];
               </div>
             </div>
 
-
             <!-- ASIGNACIONES TOTALES -->
             <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
+              <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                        Asignaciones Totales</div>
-
-                      <?php
-                      include "./conexion.php";
-                      $sql = $mysqli->query("SELECT COUNT(*) AS total_registros FROM asignaciones");
-                      while ($datos = $sql->fetch_object()) { ?>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                          <?php echo $datos->total_registros ?>
-                        </div>
-                        </td>
-                        </tr>
-                      <?php }
-                      ?>
-
+                        Asignaciones Totales
+                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <?php echo $datos_asignaciones; ?>
+                      </div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-user-check fa-2x text-gray-300"></i>
@@ -256,50 +242,73 @@ $rol = $_SESSION['ID_Rol'];
           </div>
         </div>
 
-
         <!-- Donut Chart -->
-        <div class="col-xl-4 col-lg-5">
-          <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-              <div class="chart-pie pt-4">
-                <canvas id="myPieChart"></canvas>
-              </div>
-              <hr>
-              Styling for the donut chart can be found in the
-              <code>/assets/js/demo/chart-pie-demo.js</code> file.
-            </div>
+
+
+
+        <div class="card shadow">
+        <h5 class="card-title text-center mb-4" style="font-size: 2.7rem;">Distribución Total</h5>
+          <div class="card-body">
+            
+            <canvas id="myChart"></canvas>
           </div>
         </div>
-      </div>
 
+        <script src="assets/js/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/feather.min.js"></script>
+        <script src="assets/js/jquery.slimscroll.min.js"></script>
+        <script src="assets/js/jquery.dataTables.min.js"></script>
+        <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/plugins/apexchart/apexcharts.min.js"></script>
+        <script src="assets/plugins/apexchart/chart-data.js"></script>
+        <script src="vendor/chart.js/Chart.min.js"></script>
+        <script src="assets/js/script.js"></script>
 
-    </div>
-  </div>
-  <!-- /Main content ends here -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  </div>
+        <!-- Page level custom scripts -->
+        <script>
+          var ctx = document.getElementById('myChart').getContext('2d');
+          var myPieChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: ["Prestamos", "Entregas", "Asignaciones"],
+              datasets: [{
+                label: 'Totales',
+                data: [<?php echo $datos_prestamos; ?>, <?php echo $datos_entregas; ?>, <?php echo $datos_asignaciones; ?>],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                hoverBorderColor: "rgba(234, 236, 244, 1)",
+              }],
+            },
+            options: {
+              maintainAspectRatio: false,
+              responsive: true,
+              animation: {
+                duration: 3000, // Duración de la animación en milisegundos
+                easing: 'easeOutBounce', // Tipo de curva de animación
+                animateRotate: true, // Animar la rotación
+                animateScale: true, // Animar la escala
+              },
+              tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                caretPadding: 10,
+              },
+              legend: {
+                display: true
+              },
+              cutoutPercentage: 80,
+            }
+          });
+        </script>
 
-  <script src="assets/js/jquery-3.6.0.min.js"></script>
-  <script src="assets/js/feather.min.js"></script>
-  <script src="assets/js/jquery.slimscroll.min.js"></script>
-  <script src="assets/js/jquery.dataTables.min.js"></script>
-  <script src="assets/js/dataTables.bootstrap4.min.js"></script>
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/plugins/apexchart/apexcharts.min.js"></script>
-  <script src="assets/plugins/apexchart/chart-data.js"></script>
-  <script src="vendor/chart.js/Chart.min.js"></script>
-  <script src="assets/js/script.js"></script>
-
-
-  <!-- Page level custom scripts -->
-  <script src="assets/js/demo/chart-area-demo.js"></script>
-  <script src="assets/js/demo/chart-pie-demo.js"></script>
-  <script src="assets/js/demo/chart-bar-demo.js"></script>
 </body>
 
 </html>

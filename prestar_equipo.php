@@ -101,6 +101,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                 </div>
             </div>
         </div>
+
         <div class="sidebar" id="sidebar">
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
@@ -182,8 +183,9 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="usuario">Seleccionar Usuario</label>
-                                    <select class="select form-control" name="usuario_id" id="usuario">
+                                    <select class="select form-control" name="usuario_id" id="usuario" required>
                                         <?php foreach ($usuarios as $usuario) : ?>
+                                            <option value="">Seleccione un usuario</option>
                                             <option value="<?php echo $usuario['id']; ?>"><?php echo htmlspecialchars($usuario['nombre']); ?></option>
                                         <?php endforeach; ?>
                                     </select>
@@ -194,11 +196,12 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                                 <label for="buscarEquipo">Buscar por Nombre de Equipo</label>
                                 <input type="text" class="form-control" id="buscarEquipo" placeholder="Ingrese el nombre del equipo">
                             </div>
+
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label>Seleccionar Equipos</label>
                                     <div class="card">
-                                        <div class="card-body">
+                                        <div class="card-body" style="max-height: 300px; overflow-y: auto;"> <!-- Aquí agregamos el estilo -->
                                             <table class="table">
                                                 <thead>
                                                     <tr>
@@ -226,12 +229,12 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>
-
                                             </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label">Cargar archivo PDF</label>
                                 <input

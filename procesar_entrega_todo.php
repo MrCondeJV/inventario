@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
             $stmt_placa->fetch();
             $stmt_placa->close();
 
-            
+
 
 
             // Actualizar la cantidad en la tabla `equipos`
@@ -162,17 +162,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
 
             // Insertar el detalle de la entrega incluyendo `placa_equipo`
             if ($stmt_detalle = $mysqli->prepare("
-        INSERT INTO detalles_entrega (id_entrega, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_entregada, placa_equipo, Estado)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'Entregado')
-    ")) {
+INSERT INTO detalles_entrega (id_entrega, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_entregada, placa_equipo, Estado)
+VALUES (?, ?, ?, ?, ?, ?, ?, 'Entregado')
+")) {
                 $stmt_detalle->bind_param("iisssss", $id_entrega, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $cantidad_entregada, $placa_equipo);
+
                 if (!$stmt_detalle->execute()) {
                     throw new Exception("Error en la ejecución de la inserción de detalles de entrega: " . $stmt_detalle->error);
                 }
+
+                // Cerrar la primera declaración
                 $stmt_detalle->close();
+
+                // Segunda inserción en la tabla `historial_entregas`
+                if ($stmt_historial = $mysqli->prepare("
+    INSERT INTO historial_entregas (id_entrega, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_entregada, placa_equipo, Estado)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 'Entregado')
+")) {
+                    $stmt_historial->bind_param("iisssss", $id_entrega, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $cantidad_entregada, $placa_equipo);
+
+                    if (!$stmt_historial->execute()) {
+                        throw new Exception("Error en la ejecución de la inserción de historial de entregas: " . $stmt_historial->error);
+                    }
+
+                    // Cerrar la segunda declaración
+                    $stmt_historial->close();
+                } else {
+                    throw new Exception("Error en la preparación de la consulta de inserción de historial de entregas: " . $mysqli->error);
+                }
             } else {
                 throw new Exception("Error en la preparación de la consulta de inserción de detalles de entrega: " . $mysqli->error);
             }
+
 
             // Eliminar el detalle del préstamo
             if ($stmt = $mysqli->prepare("DELETE FROM detalles_prestamo WHERE id = ?")) {
