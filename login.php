@@ -47,7 +47,7 @@ if ($_POST) {
     <meta name="robots" content="noindex, nofollow">
     <title>Login - Pos admin template</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.jpg">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/logos/esfim_logo.png" />
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
