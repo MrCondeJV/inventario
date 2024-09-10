@@ -172,7 +172,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
         <div class="content">
             <div class="page-header">
                 <div class="page-title">
-                    <h4>Préstamo de Equipos</h4>
+                    <h4>Asignacion de Equipos</h4>
                 </div>
             </div>
 
@@ -256,7 +256,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                             </div>
 
                             <div class="col-lg-12">
-                                <button type="submit" class="btn btn-success me-2">Prestar</button>
+                                <button type="submit" class="btn btn-success me-2">Asignar</button>
                                 <a href="index.php" class="btn btn-danger">Cancelar</a>
                             </div>
                         </div>

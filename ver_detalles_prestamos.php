@@ -7,6 +7,8 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
+
+
 // Verificar si el parámetro 'id' está presente en la URL
 if (isset($_GET['id'])) {
     $id_prestamo = $_GET['id'];
@@ -23,6 +25,25 @@ if (isset($_GET['id'])) {
 } else {
     echo "ID de préstamo no especificado.";
     exit();
+}
+ 
+$id_prestamo = $detalle->id_prestamo;
+
+// Obtener los préstamos del usuario seleccionado
+$prestamos = [];
+if ($id_prestamo > 0) {
+    $prestamos_stmt = $mysqli->prepare("SELECT dp.id, e.Nombre AS Nombre_equipo, dp.Cantidad_prestada, e.Serie, dp.placa_equipo AS placa_equipo 
+        FROM historial_prestamos dp
+        INNER JOIN equipos e ON dp.serie_equipo = e.Serie
+        INNER JOIN prestamos p ON dp.id_prestamo = p.id
+        WHERE p.id = ?");
+    if ($prestamos_stmt) {
+        $prestamos_stmt->bind_param("i", $id_prestamo);
+        $prestamos_stmt->execute();
+        $prestamos_result = $prestamos_stmt->get_result();
+        $prestamos = $prestamos_result->fetch_all(MYSQLI_ASSOC);
+        $prestamos_stmt->close();
+    }
 }
 ?>
 
@@ -186,8 +207,8 @@ if (isset($_GET['id'])) {
                 <h2>Detalles del Préstamo</h2>
                 <table class="table table-bordered">
                     <tr>
-                        <th>ID del Préstamo:</th>
-                        <td><?php echo $detalle->id; ?></td>
+                        <th>ID del Usuario:</th>
+                        <td><?php echo $detalle->usuario_id; ?></td>
                     </tr>
                     <tr>
                         <th>Código del Préstamo:</th>
@@ -198,9 +219,29 @@ if (isset($_GET['id'])) {
                         <td><?php echo $detalle->Nombre_usuario; ?></td>
                     </tr>
                     <tr>
-                        <th>Fecha del Préstamo:</th>
-                        <td><?php echo $detalle->Fecha_prestamo; ?></td>
+                        <th>Equipos prestados:</th>
+                        <td>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Equipo</th>
+                                        <th>Placa</th>
+                                        <th>Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($prestamos as $equipo) : ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($equipo['Nombre_equipo']); ?></td>
+                                            <td><?php echo htmlspecialchars($equipo['placa_equipo']); ?></td>
+                                            <td><?php echo htmlspecialchars($equipo['Cantidad_prestada']); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
+
                     <!-- Agrega más detalles según tu tabla de préstamos -->
                 </table>
                 <a href="historial_prestamos.php" class="btn btn-primary">Volver al Historial</a>

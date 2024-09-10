@@ -24,6 +24,25 @@ if (isset($_GET['id'])) {
     echo "ID de préstamo no especificado.";
     exit();
 }
+
+$id_asignacion = $detalle->id_asignacion;
+
+// Obtener los préstamos del usuario seleccionado
+$prestamos = [];
+if ($id_asignacion > 0) {
+    $prestamos_stmt = $mysqli->prepare("SELECT da.id, e.Nombre AS Nombre_equipo, da.Cantidad_asignada, e.Serie, da.placa_equipo AS placa_equipo 
+        FROM historial_asignaciones da
+        INNER JOIN equipos e ON da.serie_equipo = e.Serie
+        INNER JOIN asignaciones a ON da.id_asignacion = a.id
+        WHERE a.id = ?");
+    if ($prestamos_stmt) {
+        $prestamos_stmt->bind_param("i", $id_asignacion);
+        $prestamos_stmt->execute();
+        $prestamos_result = $prestamos_stmt->get_result();
+        $prestamos = $prestamos_result->fetch_all(MYSQLI_ASSOC);
+        $prestamos_stmt->close();
+    }
+}
 ?>
 
 
@@ -183,7 +202,7 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
             <div class="container">
-                <h2>Detalles del Préstamo</h2>
+                <h2>Detalles de la asignacion</h2>
                 <table class="table table-bordered">
                     <tr>
                         <th>ID del Préstamo:</th>
@@ -198,8 +217,27 @@ if (isset($_GET['id'])) {
                         <td><?php echo $detalle->Nombre_usuario; ?></td>
                     </tr>
                     <tr>
-                        <th>Fecha del Préstamo:</th>
-                        <td><?php echo $detalle->Fecha_prestamo; ?></td>
+                    <th>Equipos Asignados:</th>
+                        <td>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Equipo</th>
+                                        <th>Placa</th>
+                                        <th>Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($prestamos as $equipo) : ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($equipo['Nombre_equipo']); ?></td>
+                                            <td><?php echo htmlspecialchars($equipo['placa_equipo']); ?></td>
+                                            <td><?php echo htmlspecialchars($equipo['Cantidad_asignada']); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
                     <!-- Agrega más detalles según tu tabla de préstamos -->
                 </table>
