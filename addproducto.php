@@ -190,6 +190,7 @@ $rol = $_SESSION['ID_Rol']
                   <select class="select" name="Categoria" required>
                     <option>Escoger Categoria</option>
                     <option>Tecnologia</option>
+                    <option>Herramientas</option>
                   </select>
                 </div>
               </div>

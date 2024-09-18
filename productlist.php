@@ -167,10 +167,7 @@ $rol = $_SESSION['ID_Rol']
           <div class="table-top">
             <div class="search-set">
               <div class="search-path">
-                <a class="btn btn-filter" id="filter_search">
-                  <img src="assets/img/icons/filter.svg" alt="img" />
-                  <span><img src="assets/img/icons/closes.svg" alt="img" /></span>
-                </a>
+
               </div>
               <div class="search-input">
                 <a class="btn btn-searchset"><img src="assets/img/icons/search-white.svg" alt="img" /></a>
@@ -268,8 +265,10 @@ $rol = $_SESSION['ID_Rol']
                     <td><?php echo $datos->Estado ?></td>
                     <td><?php echo $datos->Cantidad ?></td>
                     <td>
-                      <img src="<?php echo $datos->Imagen ?>" alt="Imagen" class="img-thumbnail" style="width: 60px; height: 60px;">
+                      <img src="<?php echo $datos->Imagen ?>" alt="Imagen" class="img-thumbnail" style="width: 60px; height: 60px; cursor: pointer;"
+                        onclick="expandImage('<?php echo $datos->Imagen ?>')">
                     </td>
+
                     <td>
                       <a class="me-3" href="editproduct.php?id=<?php echo $datos->id; ?>">
                         <img src="assets/img/icons/edit.svg" alt="img" />
@@ -289,6 +288,17 @@ $rol = $_SESSION['ID_Rol']
     </div>
   </div>
   </div>
+  <!-- Modal para expandir la imagen -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <img src="" id="expandedImage" class="img-fluid" alt="Imagen expandida">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/js/jquery-3.6.0.min.js"></script>
   <script src="assets/js/feather.min.js"></script>
   <script src="assets/js/jquery.slimscroll.min.js"></script>
@@ -299,6 +309,16 @@ $rol = $_SESSION['ID_Rol']
   <script src="assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
   <script src="assets/plugins/sweetalert/sweetalerts.min.js"></script>
   <script src="assets/js/script.js"></script>
+
+  <script>
+    function expandImage(src) {
+      // Asigna la fuente de la imagen seleccionada al modal
+      document.getElementById("expandedImage").src = src;
+      // Muestra el modal
+      var myModal = new bootstrap.Modal(document.getElementById('imageModal'));
+      myModal.show();
+    }
+  </script>
 
 
   <script>
