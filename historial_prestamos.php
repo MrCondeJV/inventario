@@ -8,7 +8,26 @@ if (!isset($_SESSION['id'])) {
 
 
 $nombre = $_SESSION['nombre'];
-$rol = $_SESSION['ID_Rol']
+$rol = $_SESSION['ID_Rol'];
+
+
+// Incluir la conexión a la base de datos
+include "./conexion.php";
+
+// Verificar si se ha enviado una búsqueda
+$nombre_equipo = isset($_POST['nombre_equipo']) ? $_POST['nombre_equipo'] : '';
+
+// Construir la consulta SQL
+$sql_query = "SELECT * FROM historial_prestamos";
+
+// Si se ha ingresado un nombre de equipo, agregar la cláusula WHERE
+if (!empty($nombre_equipo)) {
+  $sql_query .= " WHERE Equipo LIKE '%$nombre_equipo%'";
+}
+
+$sql = $mysqli->query($sql_query);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -199,6 +218,10 @@ $rol = $_SESSION['ID_Rol']
             </div>
           </div>
 
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+            Buscar por Equipos
+          </button>
+
           <div class="table-responsive">
             <table class="table datanew">
               <thead>
@@ -233,6 +256,47 @@ $rol = $_SESSION['ID_Rol']
               ?>
               </tbody>
             </table>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLabel">Buscar Prestamos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Formulario de búsqueda -->
+                    <form id="searchForm" onsubmit="return false;">
+                      <div class="col-lg-4 col-sm-6 col-12 mb-3">
+                        <div class="form-group">
+                          <input type="text" name="nombre_equipo" class="form-control" placeholder="Ingrese Nombre del Equipo" oninput="searchPrestamos()" />
+                        </div>
+                      </div>
+                    </form>
+
+                    <!-- Tabla de resultados -->
+                    <div class="table-responsive mt-3">
+                      <table class="table datanew" id="resultsTable">
+                        <thead>
+                          <tr>
+                            <th>Código Prestamo</th>
+                            <th>Asignado A</th>
+                            <th>Acción</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <!-- Los resultados se llenarán aquí mediante AJAX -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
@@ -241,7 +305,23 @@ $rol = $_SESSION['ID_Rol']
 
 
 
+  <script>
+    function searchPrestamos() {
+      const input = document.querySelector('input[name="nombre_equipo"]');
+      const filter = input.value;
 
+      // Realizar la búsqueda mediante AJAX
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "search_prestamos.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+          document.querySelector('#resultsTable tbody').innerHTML = this.responseText;
+        }
+      };
+      xhr.send("nombre_equipo=" + encodeURIComponent(filter));
+    }
+  </script>
 
 
   <script src="assets/js/jquery-3.6.0.min.js"></script>

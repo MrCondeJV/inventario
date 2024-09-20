@@ -204,12 +204,9 @@ if ($id_asignacion > 0) {
             <div class="container">
                 <h2>Detalles de la asignacion</h2>
                 <table class="table table-bordered">
+                   
                     <tr>
-                        <th>ID del Préstamo:</th>
-                        <td><?php echo $detalle->id; ?></td>
-                    </tr>
-                    <tr>
-                        <th>Código del Préstamo:</th>
+                        <th>Código de Asignacion:</th>
                         <td><?php echo $detalle->id_asignacion; ?></td>
                     </tr>
                     <tr>

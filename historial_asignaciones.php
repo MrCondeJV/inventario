@@ -6,10 +6,29 @@ if (!isset($_SESSION['id'])) {
   exit();
 }
 
-
 $nombre = $_SESSION['nombre'];
-$rol = $_SESSION['ID_Rol']
+$rol = $_SESSION['ID_Rol'];
+
+// Incluir la conexión a la base de datos
+include "./conexion.php";
+
+// Verificar si se ha enviado una búsqueda
+$nombre_equipo = isset($_POST['nombre_equipo']) ? $_POST['nombre_equipo'] : '';
+
+// Construir la consulta SQL
+$sql_query = "SELECT * FROM historial_asignaciones";
+
+// Si se ha ingresado un nombre de equipo, agregar la cláusula WHERE
+if (!empty($nombre_equipo)) {
+  $sql_query .= " WHERE Equipo LIKE '%$nombre_equipo%'";
+}
+
+$sql = $mysqli->query($sql_query);
+
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -177,28 +196,13 @@ $rol = $_SESSION['ID_Rol']
             </div>
           </div>
 
-          <div class="card" id="filter_inputs">
-            <div class="card-body pb-0">
-              <div class="row">
-                <div class="col-lg-2 col-sm-6 col-12">
-                  <div class="form-group">
-                    <input type="text" placeholder="Ingrese Documento" />
-                  </div>
-                </div>
-                <div class="col-lg-2 col-sm-6 col-12">
-                  <div class="form-group">
-                    <input type="text" placeholder="Ingrese Nombre" />
-                  </div>
-                </div>
-                <div class="col-lg-1 col-sm-6 col-12 ms-auto">
-                  <div class="form-group">
-                    <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img" /></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
+
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+            Buscar por Equipos
+          </button>
+
+          <!-- Tabla principal -->
           <div class="table-responsive">
             <table class="table datanew">
               <thead>
@@ -221,7 +225,7 @@ $rol = $_SESSION['ID_Rol']
                     <td><?php echo $datos->Nombre_usuario ?></td>
                     <td><?php echo $datos->Fecha_asignacion ?></td>
                     <td>
-                    <a href="ver_detalles_asignaciones.php?id=<?php echo $datos->id; ?>">
+                      <a href="ver_detalles_asignaciones.php?id=<?php echo $datos->id; ?>">
                         <img src="assets/img/icons/eye.svg" alt="img" />
                       </a>
                       <a href="uploads/<?php echo $datos->docPdf ?>" download>
@@ -234,13 +238,74 @@ $rol = $_SESSION['ID_Rol']
               </tbody>
             </table>
           </div>
+
+
+
+          <!-- Modal -->
+          <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="searchModalLabel">Buscar Asignaciones</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Formulario de búsqueda -->
+                  <form id="searchForm" onsubmit="return false;">
+                    <div class="col-lg-4 col-sm-6 col-12 mb-3">
+                      <div class="form-group">
+                        <input type="text" name="nombre_equipo" class="form-control" placeholder="Ingrese Nombre del Equipo" oninput="searchAsignaciones()" />
+                      </div>
+                    </div>
+                  </form>
+
+                  <!-- Tabla de resultados -->
+                  <div class="table-responsive mt-3">
+                    <table class="table datanew" id="resultsTable">
+                      <thead>
+                        <tr>
+                          <th>Código Asignación</th>
+                          <th>Asignado A</th>
+                          <th>Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Los resultados se llenarán aquí mediante AJAX -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        
         </div>
       </div>
     </div>
   </div>
 
 
+  <script>
+    function searchAsignaciones() {
+      const input = document.querySelector('input[name="nombre_equipo"]');
+      const filter = input.value;
 
+      // Realizar la búsqueda mediante AJAX
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "search_asignaciones.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+          document.querySelector('#resultsTable tbody').innerHTML = this.responseText;
+        }
+      };
+      xhr.send("nombre_equipo=" + encodeURIComponent(filter));
+    }
+  </script>
 
 
   <script src="assets/js/jquery-3.6.0.min.js"></script>
