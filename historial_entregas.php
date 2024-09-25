@@ -199,7 +199,7 @@ $sql = $mysqli->query($sql_query);
             Buscar por Equipos
           </button>
 
-        
+
 
           <div class="table-responsive">
             <table class="table datanew">
@@ -214,35 +214,39 @@ $sql = $mysqli->query($sql_query);
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <?php
-                  include "./conexion.php";
-                  $sql = $mysqli->query("SELECT * FROM entregas");
-                  while ($datos = $sql->fetch_object()) { ?>
-                    <td><?php echo $datos->id ?></td>
-                    <td><?php echo $datos->Cod_entrega ?></td>
-                    <td><?php echo $datos->Nombre_usuario ?></td>
-                    <td><?php echo $datos->Fecha_entregado ?></td>
-                    <td><?php echo $datos->Observaciones ?></td>
+                <?php
+                include "./conexion.php";
+                $sql = $mysqli->query("SELECT * FROM entregas");
+
+                $contador = 1; // Inicializa el contador
+                while ($datos = $sql->fetch_object()) { ?>
+                  <tr>
+                    <td><?php echo $contador; ?></td> <!-- Muestra el contador -->
+                    <td><?php echo $datos->Cod_entrega; ?></td>
+                    <td><?php echo $datos->Nombre_usuario; ?></td>
+                    <td><?php echo $datos->Fecha_entregado; ?></td>
+                    <td><?php echo $datos->Observaciones; ?></td>
                     <td>
-                       <a href="ver_detalles_entregas.php?id=<?php echo $datos->id; ?>">
+                      <a href="ver_detalles_entregas.php?id=<?php echo $datos->id; ?>">
                         <img src="assets/img/icons/eye.svg" alt="img" />
                       </a>
-                      <a href="uploads/<?php echo $datos->docPdf ?>" download>
+                      <a href="uploads/<?php echo $datos->docPdf; ?>" download>
                         <img src="assets/img/icons/download.svg" alt="img" />
                       </a>
                     </td>
-                </tr>
-              <?php }
-              ?>
+                  </tr>
+                <?php
+                  $contador++; // Incrementa el contador en cada iteración
+                } ?>
               </tbody>
+
             </table>
           </div>
 
 
 
-           <!-- Modal -->
-           <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+          <!-- Modal -->
+          <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">

@@ -225,31 +225,34 @@ $rol = $_SESSION['ID_Rol'];
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <?php
-                  include "./conexion.php";
-                  $sql = $mysqli->query("SELECT * FROM usuarios");
-                  while ($datos = $sql->fetch_object()) { ?>
-                    <td><?php echo $datos->id ?></td>
-                    <td><?php echo $datos->Documento ?></td>
-                    <td><?php echo $datos->Nombre ?></td>
-                    <td><?php echo $datos->Cargo ?></td>
-                    <td><?php echo $datos->Unidad ?></td>
-                    <td><?php echo $datos->Usuario ?></td>
-                    <td><?php echo $datos->ID_Rol ?></td>
+                <?php
+                include "./conexion.php";
+                $sql = $mysqli->query("SELECT * FROM usuarios");
+
+                $contador = 1; // Inicializa el contador
+                while ($datos = $sql->fetch_object()) { ?>
+                  <tr>
+                    <td><?php echo $contador; ?></td> <!-- Muestra el contador -->
+                    <td><?php echo $datos->Documento; ?></td>
+                    <td><?php echo $datos->Nombre; ?></td>
+                    <td><?php echo $datos->Cargo; ?></td>
+                    <td><?php echo $datos->Unidad; ?></td>
+                    <td><?php echo $datos->Usuario; ?></td>
+                    <td><?php echo $datos->ID_Rol; ?></td>
                     <td>
-                      <a class="me-3" href="newuseredit.php?id=<?php echo $datos->id ?>">
+                      <a class="me-3" href="newuseredit.php?id=<?php echo $datos->id; ?>">
                         <img src="assets/img/icons/edit.svg" alt="img" />
                       </a>
-                      <a class="me-3 "href="javascript:void(0);" onclick="confirmDeletion(<?php echo $datos->id; ?>)">
+                      <a class="me-3" href="javascript:void(0);" onclick="confirmDeletion(<?php echo $datos->id; ?>)">
                         <img src="assets/img/icons/delete.svg" alt="img" />
                       </a>
                     </td>
-                </tr>
-              <?php }
-              ?>
-
+                  </tr>
+                <?php
+                  $contador++; // Incrementa el contador en cada iteración
+                } ?>
               </tbody>
+
             </table>
           </div>
         </div>

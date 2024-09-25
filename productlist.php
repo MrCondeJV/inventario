@@ -199,20 +199,22 @@ $rol = $_SESSION['ID_Rol'];
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <?php
-                  include "./conexion.php";
-                  $sql = $mysqli->query("SELECT * FROM equipos");
-                  while ($datos = $sql->fetch_object()) { ?>
-                    <td><?php echo $datos->id ?></td>
-                    <td><?php echo $datos->Serie ?></td>
-                    <td><?php echo $datos->Nombre ?></td>
-                    <td><?php echo $datos->Categoria ?></td>
-                    <td><?php echo $datos->Estado ?></td>
-                    <td><?php echo $datos->Cantidad ?></td>
+                <?php
+                include "./conexion.php";
+                $sql = $mysqli->query("SELECT * FROM equipos");
+
+                $contador = 1; // Inicializa el contador
+                while ($datos = $sql->fetch_object()) { ?>
+                  <tr>
+                    <td><?php echo $contador; ?></td> <!-- Muestra el contador -->
+                    <td><?php echo $datos->Serie; ?></td>
+                    <td><?php echo $datos->Nombre; ?></td>
+                    <td><?php echo $datos->Categoria; ?></td>
+                    <td><?php echo $datos->Estado; ?></td>
+                    <td><?php echo $datos->Cantidad; ?></td>
                     <td>
-                      <img src="<?php echo $datos->Imagen ?>" alt="Imagen" class="img-thumbnail" style="width: 60px; height: 60px; cursor: pointer;"
-                        onclick="expandImage('<?php echo $datos->Imagen ?>')">
+                      <img src="<?php echo $datos->Imagen; ?>" alt="Imagen" class="img-thumbnail" style="width: 60px; height: 60px; cursor: pointer;"
+                        onclick="expandImage('<?php echo $datos->Imagen; ?>')">
                     </td>
 
                     <td>
@@ -225,14 +227,16 @@ $rol = $_SESSION['ID_Rol'];
                       <a href="ver_equipos_seriales.php?id=<?php echo $datos->id; ?>">
                         <img src="assets/img/icons/eye.svg" alt="img" />
                       </a>
-                      <a class="me-3 " href="javascript:void(0);" onclick="confirmDeletion(<?php echo $datos->id; ?>)">
+                      <a class="me-3" href="javascript:void(0);" onclick="confirmDeletion(<?php echo $datos->id; ?>)">
                         <img src="assets/img/icons/delete.svg" alt="img" />
                       </a>
                     </td>
-
-                </tr>
-              <?php } ?>
+                  </tr>
+                <?php
+                  $contador++; // Incrementa el contador en cada iteración
+                } ?>
               </tbody>
+
             </table>
           </div>
         </div>
@@ -293,7 +297,7 @@ $rol = $_SESSION['ID_Rol'];
     }
   </script>
 
-  
+
 
 </body>
 

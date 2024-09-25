@@ -218,7 +218,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                                                         <tr>
                                                             <td>
                                                                 <label>
-                                                                    <input class="form-check-input equipo-checkbox" type="checkbox" name="equipos[<?php echo $equipo['id']; ?>][seleccionado]" value="1" data-equipo-id="<?php echo $equipo['id']; ?>">
+                                                                    <input class="form-check-input equipo-checkbox cantidad-input" type="checkbox" name="equipos[<?php echo $equipo['id']; ?>][seleccionado]" value="1" data-equipo-id="<?php echo $equipo['id']; ?>">
                                                                     <?php echo htmlspecialchars($equipo['Nombre']); ?>
                                                                 </label>
                                                             </td>
@@ -309,6 +309,8 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
 
     <script>
         $(document).ready(function() {
+            let selectedSerials = {}; // Objeto para llevar el registro de seriales seleccionados
+
             // Carga seriales al seleccionar un equipo
             $('.cantidad-input').on('input', function() {
                 var equipoId = $(this).data('equipo-id');
@@ -319,14 +321,24 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                 // Limpiar campos de seriales previos
                 serialesContainer.empty();
 
-                // Mostrar u ocultar el contenedor de números de serie
-                if (cantidad > 0) {
+                // Limpiar los seriales seleccionados para este equipo
+                if (cantidad <= 0) {
+                    // Ocultar el contenedor si la cantidad es cero o menor
+                    parentRow.hide();
+                    // Limpiar el registro de seriales seleccionados para este equipo
+                    Object.keys(selectedSerials).forEach(function(key) {
+                        if (key.startsWith(equipoId + '-')) {
+                            delete selectedSerials[key]; // Eliminar seriales seleccionados de este equipo
+                        }
+                    });
+                } else {
+                    // Mostrar el contenedor y agregar nuevos selectores de seriales
                     parentRow.show();
                     for (var i = 0; i < cantidad; i++) {
                         serialesContainer.append(
                             '<div class="form-group mb-2">' +
                             '<label for="serial-' + equipoId + '-' + i + '">Serial ' + (i + 1) + '</label>' +
-                            '<select class="form-control" name="equipos[' + equipoId + '][seriales][]" id="serial-' + equipoId + '-' + i + '" required>' +
+                            '<select class="form-control serial-select" name="equipos[' + equipoId + '][seriales][]" id="serial-' + equipoId + '-' + i + '" required>' +
                             '<option value="">Seleccionar Serial</option>' +
                             '</select>' +
                             '</div>'
@@ -335,32 +347,45 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                         // Llama a la función para llenar los seriales disponibles para este equipo
                         loadSeriales(equipoId, i);
                     }
+                }
+            });
+
+            // Manejar el evento de cambio en el checkbox
+            $('.equipo-checkbox').on('change', function() {
+                var equipoId = $(this).data('equipo-id');
+                var parentRow = $('#seriales-container-' + equipoId);
+
+                if ($(this).is(':checked')) {
+                    parentRow.show();
                 } else {
-                    parentRow.hide();
+                    parentRow.hide(); // Oculta el contenedor de seriales
+                    $('#seriales-' + equipoId).empty(); // Limpiar seriales al desmarcar
+                    // Limpiar los seriales seleccionados para este equipo
+                    Object.keys(selectedSerials).forEach(function(key) {
+                        if (key.startsWith(equipoId + '-')) {
+                            delete selectedSerials[key]; // Eliminar seriales seleccionados de este equipo
+                        }
+                    });
                 }
             });
 
             function loadSeriales(equipoId, index) {
                 $.ajax({
-                    url: 'obtener_seriales.php', // Asegúrate de que este archivo devuelva JSON
+                    url: 'obtener_seriales.php',
                     type: 'POST',
                     data: {
                         id: equipoId
                     },
                     success: function(data) {
-                        console.log(data); // Para verificar los datos
-
-                        // Si data es un string JSON, debes parsearlo
                         if (typeof data === 'string') {
                             try {
                                 data = JSON.parse(data);
                             } catch (e) {
                                 console.error('Error al parsear JSON:', e);
-                                return; // Salir si hay un error
+                                return;
                             }
                         }
 
-                        // Ahora aseguramos que 'data' sea un array
                         if (Array.isArray(data)) {
                             var select = $('#serial-' + equipoId + '-' + index);
                             select.empty();
@@ -369,8 +394,11 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                             $.each(data, function(index, serial) {
                                 select.append('<option value="' + serial + '">' + serial + '</option>');
                             });
-                        } else {
-                            console.error('La respuesta no es un array:', data);
+
+                            // Delegar el evento de cambio
+                            select.off('change').on('change', function() {
+                                validateSerialSelection($(this), equipoId);
+                            });
                         }
                     },
                     error: function() {
@@ -379,24 +407,40 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
                 });
             }
 
+            function validateSerialSelection(select, equipoId) {
+                const selectedValue = select.val();
+                const index = select.attr('id').split('-')[2]; // Obtener el índice
 
+                // Si no se seleccionó un valor, salir
+                if (!selectedValue) return;
 
-
-            $('.equipo-checkbox').on('change', function() {
-                var equipoId = $(this).data('equipo-id');
-                var isChecked = $(this).is(':checked');
-                var cantidadInput = $('input[data-equipo-id="' + equipoId + '"]');
-                var parentRow = $('#seriales-container-' + equipoId);
-
-                if (isChecked) {
-                    cantidadInput.trigger('input');
-                } else {
-                    parentRow.hide();
-                    $('#seriales-' + equipoId).empty();
+                // Comprobar si el serial ya ha sido seleccionado
+                if (selectedSerials[selectedValue]) {
+                    alert('Este serial ya ha sido seleccionado. Por favor, elige otro.'); // Mensaje de advertencia
+                    select.val(''); // Restablecer el valor del select
+                    return;
                 }
-            });
+
+                // Agregar serial a la lista de seleccionados
+                selectedSerials[selectedValue] = true;
+
+                // Manejar la deselección
+                select.closest('.form-group').siblings().find('.serial-select').on('change', function() {
+                    if ($(this).val() === selectedValue) {
+                        delete selectedSerials[selectedValue]; // Eliminar el serial de la lista
+                    }
+                });
+
+                // Asegúrate de limpiar el registro si la cantidad se cambia posteriormente
+                $('.cantidad-input[data-equipo-id="' + equipoId + '"]').on('input', function() {
+                    if (parseInt($(this).val()) !== select.closest('.form-group').index()) {
+                        delete selectedSerials[selectedValue]; // Limpiar el serial si cambia la cantidad
+                    }
+                });
+            }
         });
     </script>
+
 
 
     <script>

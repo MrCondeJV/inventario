@@ -31,11 +31,12 @@ $id_equipo = $detalle->id_equipo;
 $equipos = [];
 if ($id_equipo > 0) {
     $equipos_stmt = $mysqli->prepare("
-    SELECT ee.id_equipo, e.id 
+    SELECT e.Nombre, ee.serial 
     FROM equipos_especificos ee
     INNER JOIN equipos e ON ee.id_equipo = e.id
     WHERE e.id = ?
-");
+    ");
+
     if ($equipos_stmt) {
         $equipos_stmt->bind_param("i", $id_equipo);
         $equipos_stmt->execute();
@@ -44,6 +45,7 @@ if ($id_equipo > 0) {
         $equipos_stmt->close();
     }
 }
+
 ?>
 
 
@@ -200,13 +202,13 @@ if ($id_equipo > 0) {
                 <div class="page-title">
                     <h4>Lista de Equipos por serial</h4>
                     <div class="page-btn">
-                    <a href="productlist.php" class="btn"><img src="assets/img/icons/back.svg" alt="img" class="me-1" /></a>
-                </div>
+                        <a href="productlist.php" class="btn"><img src="assets/img/icons/back.svg" alt="img" class="me-1" /></a>
+                    </div>
                 </div>
                 <div class="page-btn">
                     <a href="add_equipo_especifico.php?id=<?php echo $id_equipo; ?>" class="btn btn-added"><img src="assets/img/icons/plus.svg" alt="img" class="me-1" />Agregar Serial</a>
                 </div>
-               
+
             </div>
 
             <div class="card shadow">
@@ -234,29 +236,44 @@ if ($id_equipo > 0) {
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Nombre</th>
                                     <th>Serial</th>
                                     <th>Accion</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <?php
-                                    include "./conexion.php";
-                                    $sql = $mysqli->query("SELECT * FROM equipos_especificos WHERE id_equipo = $id_equipo");
-                                    while ($datos = $sql->fetch_object()) { ?>
-                                        <td><?php echo $datos->id ?></td>
-                                        <td><?php echo $datos->serial ?></td>
-                                        <td><a class="me-3" href="edit_equipo_especifico.php?id=<?php echo $datos->id; ?>">
+                                <?php
+                                include "./conexion.php";
+
+                                // Cambiamos la consulta para obtener el nombre
+                                $sql = $mysqli->query("
+        SELECT ee.id, ee.serial, e.Nombre 
+        FROM equipos_especificos ee
+        INNER JOIN equipos e ON ee.id_equipo = e.id
+        WHERE ee.id_equipo = $id_equipo
+    ");
+
+                                $contador = 1; // Inicializa el contador
+                                while ($datos = $sql->fetch_object()) { ?>
+                                    <tr>
+                                        <td><?php echo $contador; ?></td> <!-- Muestra el contador -->
+                                        <td><?php echo $datos->Nombre; ?></td> <!-- Muestra el nombre -->
+                                        <td><?php echo $datos->serial; ?></td>
+                                        <td>
+                                            <a class="me-3" href="edit_equipo_especifico.php?id=<?php echo $datos->id; ?>">
                                                 <img src="assets/img/icons/edit.svg" alt="img" />
                                             </a>
-                                            <a class="me-3 " href="javascript:void(0);" onclick="confirmDeletion(<?php echo $datos->id; ?>)">
+                                            <a class="me-3" href="javascript:void(0);" onclick="confirmDeletion(<?php echo $datos->id; ?>)">
                                                 <img src="assets/img/icons/delete.svg" alt="img" />
                                             </a>
-
                                         </td>
-                                </tr>
-                            <?php } ?>
+                                    </tr>
+                                <?php
+                                    $contador++; // Incrementa el contador en cada iteración
+                                } ?>
                             </tbody>
+
+
                         </table>
                     </div>
                 </div>
