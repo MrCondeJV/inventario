@@ -7,7 +7,9 @@ if (!isset($_SESSION['id'])) {
 }
 
 $nombre = $_SESSION['nombre'];
-$rol = $_SESSION['ID_Rol']
+$rol = $_SESSION['ID_Rol'];
+
+
 ?>
 
 <!DOCTYPE html>
@@ -181,63 +183,7 @@ $rol = $_SESSION['ID_Rol']
               </ul>
             </div>
           </div>
-          <div class="card mb-0" id="filter_inputs">
-            <div class="card-body pb-0">
-              <div class="row">
-                <div class="col-lg-12 col-sm-12">
-                  <div class="row">
-                    <div class="col-lg col-sm-6 col-12">
-                      <div class="form-group">
-                        <select class="select">
-                          <option>Choose Product</option>
-                          <option>Macbook pro</option>
-                          <option>Orange</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg col-sm-6 col-12">
-                      <div class="form-group">
-                        <select class="select">
-                          <option>Choose Category</option>
-                          <option>Computers</option>
-                          <option>Fruits</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg col-sm-6 col-12">
-                      <div class="form-group">
-                        <select class="select">
-                          <option>Choose Sub Category</option>
-                          <option>Computer</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg col-sm-6 col-12">
-                      <div class="form-group">
-                        <select class="select">
-                          <option>Brand</option>
-                          <option>N/D</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg col-sm-6 col-12">
-                      <div class="form-group">
-                        <select class="select">
-                          <option>Price</option>
-                          <option>150.00</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg-1 col-sm-6 col-12">
-                      <div class="form-group">
-                        <a class="btn btn-filters ms-auto"><img src="assets/img/icons/search-whites.svg" alt="img" /></a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
           <div class="table-responsive">
             <table class="table datanew">
               <thead>
@@ -270,8 +216,14 @@ $rol = $_SESSION['ID_Rol']
                     </td>
 
                     <td>
+                      <a class="me-3" href="add_equipo_especifico.php?id=<?php echo $datos->id; ?>">
+                        <img src="assets/img/icons/add.svg" alt="img" />
+                      </a>
                       <a class="me-3" href="editproduct.php?id=<?php echo $datos->id; ?>">
                         <img src="assets/img/icons/edit.svg" alt="img" />
+                      </a>
+                      <a href="ver_equipos_seriales.php?id=<?php echo $datos->id; ?>">
+                        <img src="assets/img/icons/eye.svg" alt="img" />
                       </a>
                       <a class="me-3 " href="javascript:void(0);" onclick="confirmDeletion(<?php echo $datos->id; ?>)">
                         <img src="assets/img/icons/delete.svg" alt="img" />
@@ -340,6 +292,8 @@ $rol = $_SESSION['ID_Rol']
       });
     }
   </script>
+
+  
 
 </body>
 

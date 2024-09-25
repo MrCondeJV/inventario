@@ -137,6 +137,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($usuario_id)) {
             $stmt_placa->close();
 
 
+            // Actualizar la columna habilitado en equipos_especificos
+            if ($stmt_habilitado = $mysqli->prepare("UPDATE equipos_especificos SET habilitado = 1 WHERE serial = ?")) {
+                $stmt_habilitado->bind_param("s", $placa_equipo);
+                if (!$stmt_habilitado->execute()) {
+                    throw new Exception("Error al actualizar la columna habilitado en la tabla equipos_especificos: " . $stmt_habilitado->error);
+                }
+                $stmt_habilitado->close();
+            } else {
+                throw new Exception("Error en la preparación de la consulta para actualizar habilitado: " . $mysqli->error);
+            }
+
 
 
             // Actualizar la cantidad en la tabla `equipos`

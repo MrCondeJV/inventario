@@ -300,32 +300,81 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
             });
         });
     </script>
+
     <script>
         $(document).ready(function() {
+            // Carga seriales al seleccionar un equipo
             $('.cantidad-input').on('input', function() {
                 var equipoId = $(this).data('equipo-id');
                 var cantidad = $(this).val();
                 var serialesContainer = $('#seriales-' + equipoId);
                 var parentRow = $('#seriales-container-' + equipoId);
 
-                // Clear previous serial fields
+                // Limpiar campos de seriales previos
                 serialesContainer.empty();
 
-                // Show or hide the serial number input container
+                // Mostrar u ocultar el contenedor de números de serie
                 if (cantidad > 0) {
                     parentRow.show();
                     for (var i = 0; i < cantidad; i++) {
                         serialesContainer.append(
                             '<div class="form-group mb-2">' +
                             '<label for="serial-' + equipoId + '-' + i + '">Serial ' + (i + 1) + '</label>' +
-                            '<input type="text" class="form-control" name="equipos[' + equipoId + '][seriales][]" id="serial-' + equipoId + '-' + i + '" required>' +
+                            '<select class="form-control" name="equipos[' + equipoId + '][seriales][]" id="serial-' + equipoId + '-' + i + '" required>' +
+                            '<option value="">Seleccionar Serial</option>' +
+                            '</select>' +
                             '</div>'
                         );
+
+                        // Llama a la función para llenar los seriales disponibles para este equipo
+                        loadSeriales(equipoId, i);
                     }
                 } else {
                     parentRow.hide();
                 }
             });
+
+            function loadSeriales(equipoId, index) {
+                $.ajax({
+                    url: 'obtener_seriales.php', // Asegúrate de que este archivo devuelva JSON
+                    type: 'POST',
+                    data: {
+                        id: equipoId
+                    },
+                    success: function(data) {
+                        console.log(data); // Para verificar los datos
+
+                        // Si data es un string JSON, debes parsearlo
+                        if (typeof data === 'string') {
+                            try {
+                                data = JSON.parse(data);
+                            } catch (e) {
+                                console.error('Error al parsear JSON:', e);
+                                return; // Salir si hay un error
+                            }
+                        }
+
+                        // Ahora aseguramos que 'data' sea un array
+                        if (Array.isArray(data)) {
+                            var select = $('#serial-' + equipoId + '-' + index);
+                            select.empty();
+                            select.append('<option value="">Seleccionar Serial</option>');
+
+                            $.each(data, function(index, serial) {
+                                select.append('<option value="' + serial + '">' + serial + '</option>');
+                            });
+                        } else {
+                            console.error('La respuesta no es un array:', data);
+                        }
+                    },
+                    error: function() {
+                        console.log('Error al cargar los seriales.');
+                    }
+                });
+            }
+
+
+
 
             $('.equipo-checkbox').on('change', function() {
                 var equipoId = $(this).data('equipo-id');

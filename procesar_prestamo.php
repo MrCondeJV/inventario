@@ -136,6 +136,8 @@ $prestamo_id = $prestamo_stmt->insert_id;
 $prestamo_stmt->close();
 
 // Insertar detalles del préstamo en la tabla detalle_prestamo
+// ... Código previo omitido para brevedad ...
+
 foreach ($equipos as $equipo_id => $equipo_data) {
     if (isset($equipo_data['seleccionado'])) {
         $seriales = $equipo_data['seriales'] ?? [];
@@ -172,56 +174,52 @@ foreach ($equipos as $equipo_id => $equipo_data) {
         foreach ($seriales as $placa_equipo) {
             // Insertar detalle de préstamo en la tabla detalle_prestamo
             $detalle_stmt = $mysqli->prepare("
-        INSERT INTO detalles_prestamo 
-        (id_prestamo, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_prestada, placa_equipo, Estado) 
-        VALUES (?, ?, ?, ?, ?, 1, ?, ?)
-    ");
-            if (!$detalle_stmt) {
-                die('Error en la preparación de la consulta: ' . $mysqli->error);
-            }
-
-            // Cantidad prestada se fija en 1 para cada registro individual
+                INSERT INTO detalles_prestamo 
+                (id_prestamo, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_prestada, placa_equipo, Estado) 
+                VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+            ");
             $detalle_stmt->bind_param("iissssi", $prestamo_id, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $placa_equipo, $estado_equipo);
 
-            // Verificar si la ejecución falla
             if (!$detalle_stmt->execute()) {
                 error_log('Error al insertar detalle de préstamo: ' . $detalle_stmt->error);
                 echo 'Error al insertar detalle de préstamo: ' . $detalle_stmt->error;
-            } else {
-                echo 'Registro insertado con éxito para el número de serie: ' . $serie_equipo . '<br>';
             }
-
-            // Cerrar la primera sentencia
             $detalle_stmt->close();
 
-            // Segunda inserción en la tabla `historial_prestamos`
+            // Segunda inserción en la tabla historial_prestamos
             $historial_stmt = $mysqli->prepare("
-        INSERT INTO historial_prestamos 
-        (id_prestamo, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_prestada, placa_equipo, Estado) 
-        VALUES (?, ?, ?, ?, ?, 1, ?, ?)
-    ");
-            if (!$historial_stmt) {
-                die('Error en la preparación de la consulta de historial: ' . $mysqli->error);
-            }
-
-            // La misma lógica para la segunda inserción
+                INSERT INTO historial_prestamos 
+                (id_prestamo, usuario_id, Nombre_usuario, Serie_equipo, Equipo, Cantidad_prestada, placa_equipo, Estado) 
+                VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+            ");
             $historial_stmt->bind_param("iissssi", $prestamo_id, $usuario_id, $nombre_usuario, $serie_equipo, $nombre_equipo, $placa_equipo, $estado_equipo);
 
-            // Verificar si la ejecución falla
             if (!$historial_stmt->execute()) {
                 error_log('Error al insertar en historial de préstamos: ' . $historial_stmt->error);
                 echo 'Error al insertar en historial de préstamos: ' . $historial_stmt->error;
-            } else {
-                echo 'Registro insertado con éxito en el historial para el número de serie: ' . $serie_equipo . '<br>';
+            }
+            $historial_stmt->close();
+
+            // ** Actualizar el estado del equipo en la tabla equipos_especificos **
+            $deshabilitar_stmt = $mysqli->prepare("UPDATE equipos_especificos SET habilitado = 0 WHERE serial = ?");
+            if (!$deshabilitar_stmt) {
+                die('Error en la preparación de la consulta de deshabilitación: ' . $mysqli->error);
             }
 
-            // Cerrar la segunda sentencia
-            $historial_stmt->close();
+            $deshabilitar_stmt->bind_param("s", $placa_equipo);
+
+            if (!$deshabilitar_stmt->execute()) {
+                error_log('Error al deshabilitar el equipo con serial: ' . $placa_equipo . ' - ' . $deshabilitar_stmt->error);
+                echo 'Error al deshabilitar el equipo con serial: ' . $placa_equipo . '<br>';
+            } else {
+                echo 'Equipo con serial ' . $placa_equipo . ' deshabilitado correctamente.<br>';
+            }
+
+            $deshabilitar_stmt->close();
         }
     }
 }
 
-
-
+// Redirigir a la página de éxito
 header("Location: index.php?prestamo=exito");
 exit();

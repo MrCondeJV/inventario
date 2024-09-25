@@ -32,8 +32,7 @@ $buscar_serie->store_result();
 if ($buscar_serie->num_rows > 0) {
   $buscar_serie->close();
   $_SESSION['error'] = "Ya existe un equipo con la Serie ingresada.";
-  header("Location: addproducto.php");
-  exit();
+ 
 }
 
 $buscar_serie->close();
@@ -42,10 +41,13 @@ $buscar_serie->close();
 move_uploaded_file($imagen_temp, $imagen_destino);
 
 // Insertar datos en la base de datos
-$insertar_equipo = $mysqli->prepare("INSERT INTO equipos (Serie, Nombre, Categoria, Estado, Cantidad, Imagen) VALUES (?, ?, ?, ?, ?, ?)");
-$insertar_equipo->bind_param("ssssss", $serie, $nombre, $categoria, $estado, $cantidad, $imagen_destino);
+$insertar_equipo = $mysqli->prepare("INSERT INTO equipos (Serie, Nombre, Categoria, Estado, Imagen) VALUES (?, ?, ?, ?, ?)");
+$insertar_equipo->bind_param("sssss", $serie, $nombre, $categoria, $estado, $imagen_destino);
 $insertar_equipo->execute();
 $insertar_equipo->close();
+
+//Actualizar cantidad de equipos
+
 
 // Redireccionar a la lista de equipos después de guardar
 header("Location: productlist.php");

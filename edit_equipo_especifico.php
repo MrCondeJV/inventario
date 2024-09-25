@@ -6,10 +6,66 @@ if (!isset($_SESSION['id'])) {
   exit();
 }
 
-
 $nombre = $_SESSION['nombre'];
-$rol = $_SESSION['ID_Rol']
+$rol = $_SESSION['ID_Rol'];
+
+include "./conexion.php";
+
+// Recibir el id del equipo
+if (isset($_GET['id'])) {
+  $equipo_id = $_GET['id'];
+
+  // Consulta para obtener los datos del equipo por su ID
+  $stmt = $mysqli->prepare("SELECT * FROM equipos_especificos WHERE id = ?");
+  $stmt->bind_param("i", $equipo_id);
+  $stmt->execute();
+  $resultado = $stmt->get_result();
+  $equipo = $resultado->fetch_assoc();
+
+ // Verificar si se encontró el equipo
+ if (!$equipo) {
+  // Redirigir si no se encuentra el equipo
+  header("Location: productlist.php");
+  exit();
+}
+
+// Cerrar la consulta preparada
+$stmt->close();
+} else {
+  // Redirigir si no se pasa el id
+  header("Location: productlist.php");
+  exit();
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Validación y limpieza de datos recibidos del formulario
+  $serial = trim($_POST['serial']);
+
+
+
+  // Actualizar los datos del equipo en la base de datos
+  $stmt = $mysqli->prepare("UPDATE equipos_especificos SET serial=? WHERE id=?");
+  if (!$stmt) {
+      echo "Error en la preparación de la consulta: " . $mysqli->error;
+      exit();
+  }
+
+  $stmt->bind_param("si", $serial,  $equipo_id);
+
+  if ($stmt->execute()) {
+      // Redirigir a la lista de equipos después de la actualización exitosa
+      header("Location: productlist.php");
+      exit();
+  } else {
+      echo "Hubo un problema al actualizar el equipo: " . $stmt->error;
+  }
+
+  // Cerrar la consulta preparada
+  $stmt->close();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -162,122 +218,51 @@ $rol = $_SESSION['ID_Rol']
     <div class="content">
       <div class="page-header">
         <div class="page-title">
-          <h4>Agregar Equipo</h4>
+          <h4>Agregar Serie de Equipo</h4>
           <h6>Crear nuevo Equipo</h6>
         </div>
       </div>
 
       <div class="card shadow">
         <div class="card-body">
-          <form action="guardar_equipo.php" method="post" enctype="multipart/form-data">
-
+          <form method="post">
+            <input type="hidden" name="equipo_id" value="<?php echo $equipo_id; ?>">
             <div class="row">
               <div class="col-lg-3 col-sm-6 col-12">
                 <div class="form-group">
-                  <label>Cod. Serie</label>
-                  <input type="text" name="Serie" required>
+                  <label>Serial</label>
+                  <input type="text" name="serial" value="<?php echo htmlspecialchars($equipo['serial']); ?>" required> 
                 </div>
               </div>
-              <div class="col-lg-3 col-sm-6 col-12">
-                <div class="form-group">
-                  <label>Nombre Equipo</label>
-                  <input type="text" name="Nombre" required>
-                </div>
-              </div>
-              <div class="col-lg-3 col-sm-6 col-12">
-                <div class="form-group">
-                  <label>Categoria</label>
-                  <select class="select" name="Categoria" required>
-                    <option>Escoger Categoria</option>
-                    <option>Tecnologia</option>
-                    <option>Herramientas</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-3 col-sm-6 col-12">
-                <div class="form-group">
-                  <label>Estado</label>
-                  <select class="select" name="Estado" required>
-                    <option>Escoger Estado</option>
-                    <option>Nuevo</option>
-                    <option>Bueno</option>
-                    <option>Regular</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="form-group">
-                  <label>Imagen de Equipo</label>
-                  <div class="image-upload">
-                    <input type="file" id="inputFile" name="Imagen" class="form-control" required>
-                    <div class="image-uploads">
-                      <img src="assets/img/icons/upload.svg" alt="img" />
-                      <h4>Arrastra y suelta un archivo para cargar</h4>
-                    </div>
-                  </div>
-                </div>
-                <div id="fileName"></div> <!-- Aquí se mostrará el nombre del archivo -->
-              </div>
-              <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                  const inputFile = document.getElementById('inputFile');
-                  const fileNameDiv = document.getElementById('fileName');
-
-                  inputFile.addEventListener('change', function() {
-                    const file = this.files[0];
-                    fileNameDiv.textContent = file.name;
-                  });
-
-                  // Para el soporte de arrastrar y soltar
-                  inputFile.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.classList.add('dragover');
-                  });
-
-                  inputFile.addEventListener('dragleave', function() {
-                    this.classList.remove('dragover');
-                  });
-
-                  inputFile.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    this.classList.remove('dragover');
-
-                    const file = e.dataTransfer.files[0];
-                    fileNameDiv.textContent = file.name;
-                  });
-                });
-              </script>
-
-
               <div class="col-lg-12">
                 <button type="submit" class="btn btn-success me-2">Guardar</button>
                 <a href="productlist.php" class="btn btn-danger">Cancelar</a>
               </div>
             </div>
-          </form>
         </div>
       </div>
     </div>
-  </div>
-  </div>
 
-  <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/feather.min.js"></script>
+    <script src="assets/js/jquery.slimscroll.min.js"></script>
+    <script src="assets/js/jquery.dataTables.min.js"></script>
+    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/plugins/select2/js/select2.min.js"></script>
+    <script src="assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
+    <script src="assets/plugins/sweetalert/sweetalerts.min.js"></script>
+    <script src="assets/js/script.js"></script>
 
-  <script src="assets/js/feather.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        // Mostrar modal de error si existe
+        <?php if (isset($_SESSION['error'])): ?>
+          $('#errorModal').modal('show');
+        <?php endif; ?>
+      });
+    </script>
 
-  <script src="assets/js/jquery.slimscroll.min.js"></script>
-
-  <script src="assets/js/jquery.dataTables.min.js"></script>
-  <script src="assets/js/dataTables.bootstrap4.min.js"></script>
-
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
-
-  <script src="assets/plugins/select2/js/select2.min.js"></script>
-
-  <script src="assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
-  <script src="assets/plugins/sweetalert/sweetalerts.min.js"></script>
-
-  <script src="assets/js/script.js"></script>
 </body>
 
 </html>

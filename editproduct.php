@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_equipo = trim($_POST['Nombre']);
     $categoria = trim($_POST['Categoria']);
     $estado = trim($_POST['Estado']);
-    $cantidad = trim($_POST['Cantidad']);
+   
 
     // Subida de imagen si se proporciona una nueva
     if ($_FILES['Imagen']['size'] > 0) {
@@ -85,13 +85,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Actualizar los datos del equipo en la base de datos
-    $stmt = $mysqli->prepare("UPDATE equipos SET Serie=?, Nombre=?, Categoria=?, Estado=?, Cantidad=?, Imagen=? WHERE id=?");
+    $stmt = $mysqli->prepare("UPDATE equipos SET Serie=?, Nombre=?, Categoria=?, Estado=?, Imagen=? WHERE id=?");
     if (!$stmt) {
         echo "Error en la preparación de la consulta: " . $mysqli->error;
         exit();
     }
 
-    $stmt->bind_param("ssssisi", $serie, $nombre_equipo, $categoria, $estado, $cantidad, $imagen_url, $id_equipo);
+    $stmt->bind_param("sssssi", $serie, $nombre_equipo, $categoria, $estado, $imagen_url, $id_equipo);
 
     if ($stmt->execute()) {
         // Redirigir a la lista de equipos después de la actualización exitosa
@@ -283,12 +283,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label>Stock</label>
-                                    <input type="text" name="Cantidad" value="<?php echo htmlspecialchars($equipo['Cantidad']); ?>" />
-                                </div>
-                            </div>
+                            
 
                             <div class="col-lg-12">
                                 <div class="form-group">
