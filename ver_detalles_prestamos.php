@@ -204,12 +204,14 @@ if ($id_prestamo > 0) {
                 </div>
             </div>
             <div class="container">
-                <h2>Detalles del Préstamo</h2>
+            <div class="d-flex justify-content-between align-items-center">
+                    <h2>Detalles del prestamo</h2>
+                    <a data-bs-toggle="tooltip" href="generar_informe_detalle_prstamo.php?id=<?php echo $detalle->id_prestamo; ?>" target="_blank" data-bs-placement="top" title="Descargar PDF">
+                        <img src="assets/img/icons/pdf.svg" alt="Descargar PDF" style="width: 30px; height: 30px;" />
+                    </a>
+                </div>
                 <table class="table table-bordered">
-                    <tr>
-                        <th>ID del Usuario:</th>
-                        <td><?php echo $detalle->usuario_id; ?></td>
-                    </tr>
+                   
                     <tr>
                         <th>Código del Préstamo:</th>
                         <td><?php echo $detalle->id_prestamo; ?></td>

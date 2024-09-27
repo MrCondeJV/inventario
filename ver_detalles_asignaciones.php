@@ -198,15 +198,21 @@ if ($id_asignacion > 0) {
             <div class="page-header">
                 <div class="page-title">
                     <h4>Detalles de la asignacion</h4>
+
                     <h6>Información detallada de los equipos prestados por <?php echo htmlspecialchars($detalle->Nombre_usuario); ?></h6>
                 </div>
             </div>
             <div class="container">
-                <h2>Detalles de la asignacion</h2>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Detalles de la asignación</h2>
+                    <a data-bs-toggle="tooltip" href="generar_informe_detalle_asignacion.php?id=<?php echo $detalle->id_asignacion; ?>" target="_blank" data-bs-placement="top" title="Descargar PDF">
+                        <img src="assets/img/icons/pdf.svg" alt="Descargar PDF" style="width: 30px; height: 30px;" />
+                    </a>
+                </div>
+
                 <table class="table table-bordered">
-                   
                     <tr>
-                        <th>Código de Asignacion:</th>
+                        <th>Código de Asignación:</th>
                         <td><?php echo $detalle->id_asignacion; ?></td>
                     </tr>
                     <tr>
@@ -214,7 +220,7 @@ if ($id_asignacion > 0) {
                         <td><?php echo $detalle->Nombre_usuario; ?></td>
                     </tr>
                     <tr>
-                    <th>Equipos Asignados:</th>
+                        <th>Equipos Asignados:</th>
                         <td>
                             <table class="table">
                                 <thead>
@@ -238,8 +244,10 @@ if ($id_asignacion > 0) {
                     </tr>
                     <!-- Agrega más detalles según tu tabla de préstamos -->
                 </table>
+
                 <a href="historial_asignaciones.php" class="btn btn-primary">Volver al Historial</a>
             </div>
+
 
         </div>
     </div>

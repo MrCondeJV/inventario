@@ -197,17 +197,20 @@ if ($id_entrega > 0) {
                 <div class="page-title">
                     <h4>Detalles de la entrega</h4>
                     <h6>Información detallada de los equipos prestados por <?php echo htmlspecialchars($detalle->Nombre_usuario); ?></h6>
+
                 </div>
             </div>
             <div class="container">
-                <h2>Detalles de la Entrega</h2>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Detalles de la Entrega</h2>
+                    <a data-bs-toggle="tooltip" href="generar_informe_detalle_devolucion.php?id=<?php echo $detalle->id_entrega; ?>" target="_blank" data-bs-placement="top" title="Descargar PDF">
+                        <img src="assets/img/icons/pdf.svg" alt="Descargar PDF" style="width: 30px; height: 30px;" />
+                    </a>
+                </div>
                 <table class="table table-bordered">
+                   
                     <tr>
-                        <th>ID del Préstamo:</th>
-                        <td><?php echo $detalle->id; ?></td>
-                    </tr>
-                    <tr>
-                        <th>Código del Préstamo:</th>
+                        <th>Código de Devolucion:</th>
                         <td><?php echo $detalle->id_entrega; ?></td>
                     </tr>
                     <tr>
@@ -215,7 +218,7 @@ if ($id_entrega > 0) {
                         <td><?php echo $detalle->Nombre_usuario; ?></td>
                     </tr>
                     <tr>
-                    <th>Equipos Entregados:</th>
+                        <th>Equipos Entregados:</th>
                         <td>
                             <table class="table">
                                 <thead>

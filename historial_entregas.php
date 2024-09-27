@@ -37,7 +37,7 @@ $sql = $mysqli->query($sql_query);
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
   <title>Historial Entregas | ESFIM</title>
 
-  //Logo De plataforma
+ 
   <link rel="shortcut icon" type="image/x-icon" href="assets/img/logos/esfim_logo.png" />
 
   <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
@@ -189,7 +189,7 @@ $sql = $mysqli->query($sql_query);
             <div class="wordset">
               <ul>
                 <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img" /></a>
+                  <a data-bs-toggle="tooltip" data-bs-placement="top" href="generar_informe_general_devoluciones.php" target="_blank" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img" /></a>
                 </li>
               </ul>
             </div>

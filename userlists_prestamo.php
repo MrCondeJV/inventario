@@ -185,7 +185,7 @@ $rol = $_SESSION['ID_Rol'];
             <div class="wordset">
               <ul>
                 <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img" /></a>
+                  <a data-bs-toggle="tooltip" href="generar_informe_usuarios_prestamos.php" target="_blank" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img" /></a>
                 </li>
 
               </ul>

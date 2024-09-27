@@ -45,7 +45,7 @@ if ($usuarios_stmt = $mysqli->prepare("SELECT id, nombre FROM usuarios_prestamo"
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
-    <title>Prestar Equipo | ESFIM</title>
+    <title>Asignar Equipo | ESFIM</title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/logos/esfim_logo.png" />
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/animate.css" />

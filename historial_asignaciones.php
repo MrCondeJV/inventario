@@ -38,8 +38,8 @@ $sql = $mysqli->query($sql_query);
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
   <title>Historial Asignaciones | ESFIM</title>
 
-  //Logo De plataforma
-  <link rel="shortcut icon" type="image/x-icon" href="/assets/img/logos/esfim_logo.png" />
+
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/logos/esfim_logo.png" />
   <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
   <link rel="stylesheet" href="assets/css/animate.css" />
   <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css" />
@@ -57,10 +57,10 @@ $sql = $mysqli->query($sql_query);
     <div class="header">
       <div class="header-left active">
         <a href="index.php" class="logo">
-          <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
+        <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
         </a>
         <a href="index.php" class="logo-small">
-          <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
+        <img src="assets/img/logos/LOGO ESFIM SUB.png" alt="" width="50px" />
         </a>
         <a id="toggle_btn" href="javascript:void(0);"> </a>
       </div>
@@ -190,7 +190,7 @@ $sql = $mysqli->query($sql_query);
             <div class="wordset">
               <ul>
                 <li>
-                  <a data-bs-toggle="tooltip" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img" /></a>
+                  <a data-bs-toggle="tooltip" href="generar_informe_general_asignaciones.php" target="_blank" data-bs-placement="top" title="pdf"><img src="assets/img/icons/pdf.svg" alt="img" /></a>
                 </li>
               </ul>
             </div>

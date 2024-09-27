@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2024 at 08:51 AM
+-- Generation Time: Sep 27, 2024 at 11:13 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -37,13 +37,6 @@ CREATE TABLE `asignaciones` (
   `docPdf` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `asignaciones`
---
-
-INSERT INTO `asignaciones` (`id`, `id_asignacion`, `usuario_id`, `Nombre_usuario`, `Fecha_asignacion`, `Observaciones`, `docPdf`) VALUES
-(17, 'ASIGNACION-9a776d', 1, 'pepito', '2024-09-10 08:46:09', 'NA', 0x455854524143544f5f706f727461666f6c696f323032343038333132303031323030333136343835332e706466);
-
 -- --------------------------------------------------------
 
 --
@@ -62,16 +55,6 @@ CREATE TABLE `detalles_asignacion` (
   `Estado` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `detalles_asignacion`
---
-
-INSERT INTO `detalles_asignacion` (`id`, `id_asignacion`, `usuario_id`, `Nombre_usuario`, `Serie_equipo`, `Equipo`, `Cantidad_asignada`, `placa_equipo`, `Estado`) VALUES
-(48, 17, 1, 'pepito', 'PT002', 'Cabina Yamaha', 1, 'C10000', '0'),
-(49, 17, 1, 'pepito', 'PT001', 'Pantalla HP', 1, 'P10000', '0'),
-(50, 17, 1, 'pepito', 'PT003', 'Impresora HP', 1, 'I10000', '0'),
-(51, 17, 1, 'pepito', 'PT004', 'Camara', 1, 'CAM1000', '0');
-
 -- --------------------------------------------------------
 
 --
@@ -89,16 +72,6 @@ CREATE TABLE `detalles_entrega` (
   `placa_equipo` varchar(50) NOT NULL,
   `Estado` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `detalles_entrega`
---
-
-INSERT INTO `detalles_entrega` (`id`, `id_entrega`, `usuario_id`, `Nombre_usuario`, `Serie_equipo`, `Equipo`, `Cantidad_entregada`, `placa_equipo`, `Estado`) VALUES
-(146, 148, 1, 'pepito', 'PT002', 'Cabina Yamaha', 1, 'C10000', 'Entregado'),
-(147, 148, 1, 'pepito', 'PT001', 'Pantalla HP', 1, 'P10000', 'Entregado'),
-(148, 148, 1, 'pepito', 'PT003', 'Impresora HP', 1, 'I10000', 'Entregado'),
-(149, 148, 1, 'pepito', 'PT004', 'Camara', 1, 'CAM1000', 'Entregado');
 
 -- --------------------------------------------------------
 
@@ -133,13 +106,6 @@ CREATE TABLE `entregas` (
   `Observaciones` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `entregas`
---
-
-INSERT INTO `entregas` (`id`, `Cod_entrega`, `usuario_id`, `Nombre_usuario`, `Fecha_entregado`, `Observaciones`) VALUES
-(148, 'ENTREGA-c0f4fd', 1, 'pepito', '2024-09-10 08:47:45', 'NA');
-
 -- --------------------------------------------------------
 
 --
@@ -156,15 +122,18 @@ CREATE TABLE `equipos` (
   `Imagen` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `equipos`
+-- Table structure for table `equipos_especificos`
 --
 
-INSERT INTO `equipos` (`id`, `Serie`, `Nombre`, `Categoria`, `Estado`, `Cantidad`, `Imagen`) VALUES
-(4, 'PT002', 'Cabina Yamaha', 'Tecnologia', 'Bueno', 9, 0x6173736574732f696d672f65717569706f732f636162696e612e6a7067),
-(5, 'PT001', 'Pantalla HP', 'Tecnologia', 'Bueno', 9, 0x6173736574732f696d672f65717569706f732f70616e74616c6c2068702e6a7067),
-(7, 'PT003', 'Impresora HP', 'Tecnologia', 'Bueno', 9, 0x6173736574732f696d672f65717569706f732f696d707265736f72612e6a7067),
-(8, 'PT004', 'Camara', 'Tecnologia', 'Bueno', 9, 0x6173736574732f696d672f65717569706f732f696d707265736f72612e6a7067);
+CREATE TABLE `equipos_especificos` (
+  `id` int(11) NOT NULL,
+  `id_equipo` int(11) NOT NULL,
+  `serial` varchar(255) NOT NULL,
+  `habilitado` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -184,16 +153,6 @@ CREATE TABLE `historial_asignaciones` (
   `Estado` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `historial_asignaciones`
---
-
-INSERT INTO `historial_asignaciones` (`id`, `id_asignacion`, `usuario_id`, `Nombre_usuario`, `Serie_equipo`, `Equipo`, `Cantidad_asignada`, `placa_equipo`, `Estado`) VALUES
-(3, 17, 1, 'pepito', 'PT002', 'Cabina Yamaha', 1, 'C10000', '0'),
-(4, 17, 1, 'pepito', 'PT001', 'Pantalla HP', 1, 'P10000', '0'),
-(5, 17, 1, 'pepito', 'PT003', 'Impresora HP', 1, 'I10000', '0'),
-(6, 17, 1, 'pepito', 'PT004', 'Camara', 1, 'CAM1000', '0');
-
 -- --------------------------------------------------------
 
 --
@@ -211,16 +170,6 @@ CREATE TABLE `historial_entregas` (
   `placa_equipo` varchar(100) NOT NULL,
   `Estado` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `historial_entregas`
---
-
-INSERT INTO `historial_entregas` (`id`, `id_entrega`, `usuario_id`, `Nombre_usuario`, `Serie_equipo`, `Equipo`, `Cantidad_entregada`, `placa_equipo`, `Estado`) VALUES
-(7, 148, 1, 'pepito', 'PT002', 'Cabina Yamaha', 1, 'C10000', 'Entregado'),
-(8, 148, 1, 'pepito', 'PT001', 'Pantalla HP', 1, 'P10000', 'Entregado'),
-(9, 148, 1, 'pepito', 'PT003', 'Impresora HP', 1, 'I10000', 'Entregado'),
-(10, 148, 1, 'pepito', 'PT004', 'Camara', 1, 'CAM1000', 'Entregado');
 
 -- --------------------------------------------------------
 
@@ -240,16 +189,6 @@ CREATE TABLE `historial_prestamos` (
   `Estado` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `historial_prestamos`
---
-
-INSERT INTO `historial_prestamos` (`id`, `id_prestamo`, `usuario_id`, `Nombre_usuario`, `Serie_equipo`, `Equipo`, `Cantidad_prestada`, `placa_equipo`, `Estado`) VALUES
-(15, 86, 1, 'pepito', 'PT002', 'Cabina Yamaha', 1, 'C10000', '0'),
-(16, 86, 1, 'pepito', 'PT001', 'Pantalla HP', 1, 'P10000', '0'),
-(17, 86, 1, 'pepito', 'PT003', 'Impresora HP', 1, 'I10000', '0'),
-(18, 86, 1, 'pepito', 'PT004', 'Camara', 1, 'CAM1000', '0');
-
 -- --------------------------------------------------------
 
 --
@@ -265,13 +204,6 @@ CREATE TABLE `prestamos` (
   `Observaciones` text DEFAULT NULL,
   `docPdf` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `prestamos`
---
-
-INSERT INTO `prestamos` (`id`, `Cod_prestamo`, `usuario_id`, `Nombre_usuario`, `Fecha_prestamo`, `Observaciones`, `docPdf`) VALUES
-(86, 'PRESTAMO-70971e', 1, 'pepito', '2024-09-10 08:47:33', 'NA', 0x50726f707565737461202045636f6e6f6d696361202831292e706466);
 
 -- --------------------------------------------------------
 
@@ -338,9 +270,7 @@ CREATE TABLE `usuarios_prestamo` (
 
 INSERT INTO `usuarios_prestamo` (`id`, `Documento`, `Nombre`, `Cargo`, `Unidad`) VALUES
 (1, '12345', 'pepito', 'ADMIN', 'ESFIM'),
-(2, '55555', 'Andres', 'almacen', 'ESFIM'),
-(3, '1111111111111', 'PRUEBA PDF', 'almacen 2', 'ESFIM'),
-(4, '67425635', 'DE LA VEGA', 'TEC', 'ESFIM');
+(2, '55555', 'Andres', 'almacen', 'ESFIM');
 
 --
 -- Indexes for dumped tables
@@ -394,6 +324,13 @@ ALTER TABLE `entregas`
 ALTER TABLE `equipos`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `Serie` (`Serie`);
+
+--
+-- Indexes for table `equipos_especificos`
+--
+ALTER TABLE `equipos_especificos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_equipo` (`id_equipo`);
 
 --
 -- Indexes for table `historial_asignaciones`
@@ -454,61 +391,67 @@ ALTER TABLE `usuarios_prestamo`
 -- AUTO_INCREMENT for table `asignaciones`
 --
 ALTER TABLE `asignaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `detalles_asignacion`
 --
 ALTER TABLE `detalles_asignacion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `detalles_entrega`
 --
 ALTER TABLE `detalles_entrega`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `detalles_prestamo`
 --
 ALTER TABLE `detalles_prestamo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `entregas`
 --
 ALTER TABLE `entregas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 
 --
 -- AUTO_INCREMENT for table `equipos`
 --
 ALTER TABLE `equipos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `equipos_especificos`
+--
+ALTER TABLE `equipos_especificos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `historial_asignaciones`
 --
 ALTER TABLE `historial_asignaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `historial_entregas`
 --
 ALTER TABLE `historial_entregas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `historial_prestamos`
 --
 ALTER TABLE `historial_prestamos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `rol`
@@ -567,6 +510,12 @@ ALTER TABLE `detalles_prestamo`
 --
 ALTER TABLE `entregas`
   ADD CONSTRAINT `fk_entregas_usuarios` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios_prestamo` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `equipos_especificos`
+--
+ALTER TABLE `equipos_especificos`
+  ADD CONSTRAINT `equipos_especificos_ibfk_1` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `historial_asignaciones`
